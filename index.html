@@ -75,10 +75,13 @@
       <p>i like eating batteries (sarcasm)</p>
       <p>french guy</p>
       <br>
-      <p>my timezone: CEST</p>
+      <p>my time: <span id="time">loading...</span></p>
+      <noscript>
+        <p style="color: #999; font-style: italic;">no time for you</p>
+      </noscript>
       <p>my lovely weather: <span id="weather">loading...</span></p>
       <noscript>
-        <p style="color: #999; font-style: italic;">no weather for you, you noscript user</p>
+        <p style="color: #999; font-style: italic;">no weather for you either, you noscript user &lt;3</p>
       </noscript>
     </section>
 
@@ -206,6 +209,16 @@
       }
     }
 
+    async function loadtime() {
+      try {
+        const now = new Date().toLocaleTimeString('fr-FR', { timeZone: 'Europe/Paris' });
+        document.getElementById('time').textContent = now;
+      } catch {
+        document.getElementById('time').textContent = 'time unavailable';
+      }
+    }
+
+    loadtime();
     loadweather();
   </script>
 </body>
