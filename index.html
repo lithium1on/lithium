@@ -76,7 +76,7 @@
       <p>french guy</p>
       <br>
       <p>my timezone: CEST</p>
-      <p>my lovely weather: <span id="weather-info">loading...</span></p>
+      <p>my lovely weather: <span id="weather">loading...</span></p>
       <noscript>
         <p style="color: #999; font-style: italic;">no weather for you, you noscript user</p>
       </noscript>
@@ -186,39 +186,26 @@
   <script>
     async function loadweather() {
       try {
-        // ai code btw :stuck_out_tongue:
-        const geoResponse = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json');
-        const geoData = await geoResponse.json();
-        
-        if (!geoData.results || geoData.results.length === 0) {
-          throw new Error('Location not found');
-        }
+        const geo = await (await fetch('https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json')).json();
+        if (!geo.results?.length) throw 'location not found';
+        const { latitude, longitude } = geo.results[0];
 
-        const { latitude, longitude } = geoData.results[0];
+        const weather = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`)).json();
+        const { temperature: t, weathercode: c } = weather.current_weather;
 
-        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
-        const weatherData = await weatherResponse.json();
+        const desc = {
+          0:'☀️ clear',1:'🌤️ mostly clear',2:'⛅ partly cloudy',3:'☁️ overcast',
+          45:'🌫️ foggy',48:'🌫️ foggy',51:'🌦️ light drizzle',53:'🌦️ drizzle',
+          55:'🌦️ heavy drizzle',61:'🌧️ light rain',63:'🌧️ rain',65:'🌧️ heavy rain',
+          80:'🌦️ rain showers',81:'🌦️ rain showers',82:'⛈️ heavy showers'
+        }[c] || '🌡️ unknown';
 
-        const temp = Math.round(weatherData.current_weather.temperature);
-        const weatherCode = weatherData.current_weather.weathercode;
-        
-        const weatherDescriptions = {
-          0: '☀️ clear',
-          1: '🌤️ mostly clear', 2: '⛅ partly cloudy', 3: '☁️ overcast',
-          45: '🌫️ foggy', 48: '🌫️ foggy',
-          51: '🌦️ light drizzle', 53: '🌦️ drizzle', 55: '🌦️ heavy drizzle',
-          61: '🌧️ light rain', 63: '🌧️ rain', 65: '🌧️ heavy rain',
-          80: '🌦️ rain showers', 81: '🌦️ rain showers', 82: '⛈️ heavy showers'
-        };
-
-        const description = weatherDescriptions[weatherCode] || '🌡️ unknown';
-        document.getElementById('weather-info').textContent = `${temp}°C, ${description}`;
-        
-      } catch (error) {
-        console.error('weather fetch failed:', error);
-        document.getElementById('weather-info').textContent = 'weather unavailable';
+        document.getElementById('weather').textContent = `${Math.round(t)}°C, ${desc}`;
+      } catch {
+        document.getElementById('weather').textContent = 'weather unavailable';
       }
     }
+
 
     loadweather();
   </script>
