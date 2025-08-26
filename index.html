@@ -78,7 +78,7 @@
       <p>my timezone: CEST</p>
       <p>my lovely weather: <span id="weather-info">loading...</span></p>
       <noscript>
-        <p style="color: #999; font-style: italic;">no weather for you</p>
+        document.getElementById('weather-info').textContent = 'no weather for you';
       </noscript>
     </section>
 
