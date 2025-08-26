@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<!-- you better NOT steal it ok i see you there -->
-<!-- boii the devtools gr -->
-<!-- im gonna tickle you if you steal mwah -->
-<!-- i know where you live -->
-<!-- your ip address is 127.0.0.1 -->
-<!-- skintalker my beloved -->
-<!-- big kiss on the bussy if you see this -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -20,7 +13,7 @@
   <meta property="og:description" content="lithium's amazing website with amazing stuff - you should try eating batteries (sarcasm pls dont) - lithium lithium lithium lithium lithium lithium">
   <meta property="og:url" content="https://lithium.lat/">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://lithium.lat/assets/icon.png">
+  <meta property="og:image" content="https://lithium.lat/assets/img/icon.png">
   <meta property="theme-color" content="#696969">
   
   <!-- styling -->
@@ -63,6 +56,8 @@
       <a href="#extras">extras</a>
     </nav>
     
+    <audio id="music-player" muted controls style="position:fixed;top:10px;right:10px;width:200px;height:30px"></audio>
+
     <hr />
   </header>
 
@@ -96,13 +91,13 @@
         <summary>lithium's atm</summary>
         <p>cool deposit game i made using <a href="https://github.com/depthso/Dear-ReGui">regui</a></p>
         <p>game link: <a href="https://www.roblox.com/games/106912201193396/">https://www.roblox.com/games/106912201193396/</a></p>
-        <img src="assets/atm.png" style="max-width:500px">
+        <img src="assets/img/atm.png" style="max-width:500px">
       </details>
       
       <details>
         <summary>ratware</summary>
         <p>very dead project, executor that was last updated in march (worse than awp)</p>
-        <img src="assets/ratware.png" style="max-width:800px">
+        <img src="assets/img/ratware.png" style="max-width:800px">
         <p>ratware isnt coming back any time soon (whole server dead :broken-heart:)</p>
       </details>
       
@@ -155,7 +150,8 @@
         <summary>questions</summary>
         <p><strong>can i steal this?</strong> nuh uh</p>
         <p><strong>are you a female</strong> think about it</p>
-        <p><strong>lithium pls feet pics</strong> ok its <a href="assets/feetpics.gif">here</a></p>
+        <p><strong>ur music sucks i wanna submit soem!!</strong> no my music doesnt suck grrr but if you wanna submit contact me lol</p>
+        <p><strong>lithium pls feet pics</strong> ok its <a href="assets/img/feetpics.gif">here</a></p>
       </details>
 
       <details>
@@ -188,6 +184,29 @@
   </main>
 
   <script>
+	  // music player
+	  const songs = [
+	  	'assets/audio/ankol.opus',
+	  	'assets/audio/devil.opus',
+	  	'assets/audio/moron.opus',
+	  	'assets/audio/postedup.opus',
+	  	'assets/audio/superstar.opus'
+	  ];
+
+	  const p = document.getElementById('music-player');
+
+	  function play() {
+	  	const r = Math.floor(Math.random() * songs.length);
+	  	p.src = songs[r];
+	  	p.volume = 0.3;
+	  	p.muted = false;
+	  	p.play().catch(() => console.log('nope its blocked lmao'));
+	  }
+
+	  play();
+	  p.addEventListener('ended', play);
+
+    // about scripts
     async function loadweather() {
       try {
         const geo = await (await fetch('https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json')).json();
