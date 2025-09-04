@@ -179,7 +179,7 @@
   </main>
 
   <script>
-	  // music player
+    // music player
     const songs = [
       'assets/audio/ankol.opus',
       'assets/audio/devil.opus',
@@ -191,18 +191,24 @@
       'assets/audio/notice.opus'
     ];
 
-	  const p = document.getElementById('music-player');
+    const p = document.getElementById('music-player');
+    let lastIndex = -1;
 
-	  function play() {
-	  	const r = Math.floor(Math.random() * songs.length);
-	  	p.src = songs[r];
-	  	p.volume = 0.3;
-	  	p.muted = false;
-	  	p.play().catch(() => console.log('nope its blocked lmao'));
-	  }
+    function play() {
+      let r;
+      do {
+        r = Math.floor(Math.random() * songs.length);
+      } while (r === lastIndex && songs.length > 1);
 
-	  play();
-	  p.addEventListener('ended', play);
+      lastIndex = r;
+      p.src = songs[r];
+      p.volume = 0.3;
+      p.muted = false;
+      p.play().catch(() => console.log('nope its blocked lmao'));
+    }
+
+    play();
+    p.addEventListener('ended', play);
 
     // about scripts
     async function loadweather() {
