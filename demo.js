@@ -21,7 +21,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Text("my lovely weather: {weather}");
         ImGui.End();
 
-        ImGui.Begin("projects");
+        ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff i made;");
         if (ImGui.TreeNode("lithium's atm")) {
             ImGui.Text("cool deposit game i made using");
