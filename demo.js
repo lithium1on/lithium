@@ -67,12 +67,14 @@ const canvas = document.querySelector("#imgui-canvas");
     function frame() {
         ImGuiImplWeb.BeginRender();
         
+        // about window
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n\n");
         ImGui.Text(`my time: ${currentTime}`);
         ImGui.Text(`my lovely weather: ${currentWeather}`);
         ImGui.End();
         
+        // projects window
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff i made;");
         
@@ -95,6 +97,26 @@ const canvas = document.querySelector("#imgui-canvas");
         }
         
         ImGui.Text("\ncheck back later for more thx");
+        ImGui.End();
+
+        // links window
+        ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
+        ImGui.BulletText("hello gamers");
+        ImGui.End();
+
+        // contact window
+        ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
+        ImGui.Text("hello wrodld");
+        ImGui.End();
+
+        // donations window
+        ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
+        ImGui.Text("hello meoney");
+        ImGui.End();
+
+        // extras window
+        ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
+        ImGui.Text("hello exterzas");
         ImGui.End();
         
         ImGuiImplWeb.EndRender();
