@@ -134,7 +134,20 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // contact window
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("hello wrodld");
+        ImGui.Text("email:");
+        ImGui.SameLine();
+        if (ImGui.TextLink("contact@lithium.lat")) globalThis.open("mailto:contact@lithium.lat", "_blank");
+        ImGui.Text("discord:");
+        ImGui.SameLine();
+        if (ImGui.TextLink("@lithium_1on")) globalThis.open("https://discord.com/users/1284236064420003886", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(",");
+        ImGui.SameLine();
+        if (ImGui.TextLink("@lithetanium (alt)")) globalThis.open("https://discord.com/users/1344239874500333649", "_blank");
+        ImGui.Text("telegram:");
+        ImGui.SameLine();
+        if (ImGui.TextLink("@lithium1on")) globalThis.open("https://t.me/lithium1on", "_blank");
+
         ImGui.End();
 
         // donations window
