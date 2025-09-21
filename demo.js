@@ -152,7 +152,7 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // donations window
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("paypal: ");
+        ImGui.Text("paypal:");
         ImGui.SameLine();
         if (ImGui.TextLink("here")) {
             globalThis.open("https://paypal.me/lithiumionbattery", "_blank");
