@@ -4,15 +4,58 @@ const canvas = document.querySelector("#imgui-canvas");
 
 (async () => {
     await ImGuiImplWeb.Init({ canvas, enableDemos: false });
+    
+    let currentTime = 'loading...';
+    let currentWeather = 'loading...';
+    
+    // Time and weather loading functions
+    async function loadweather() {
+        try {
+            const geo = await (await fetch('https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json')).json();
+            if (!geo.results?.length) throw 'location not found';
+            
+            const { latitude, longitude } = geo.results[0];
+            const weather = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`)).json();
+            
+            const { temperature: t, weathercode: c } = weather.current_weather;
+            const desc = {
+                0:'clear',1:'mostly clear',2:'partly cloudy',3:'overcast',
+                45:'foggy',48:'foggy',51:'light drizzle',53:'drizzle',
+                55:'heavy drizzle',61:'light rain',63:'rain',65:'heavy rain',
+                80:'rain showers',81:'rain showers',82:'heavy showers'
+            }[c] || 'unknown';
+            
+            currentWeather = `${Math.round(t)}°C, ${desc}`;
+        } catch {
+            currentWeather = 'weather unavailable';
+        }
+    }
+    
+    function loadtime() {
+        try {
+            const now = new Date().toLocaleTimeString('fr-FR', { 
+                timeZone: 'Europe/Paris' 
+            });
+            currentTime = now;
+        } catch {
+            currentTime = 'time unavailable';
+        }
+    }
+    
+    loadtime();
+    loadweather();
+    
+    setInterval(loadtime, 1000);
+    
+    setInterval(loadweather, 10 * 60 * 1000);
 
-    // atm image
     let atmTexId = ImGuiImplWeb.LoadTexture();
     const atm = new Image();
     atm.src = "assets/img/atm.png";
     atm.onload = () => {
         ImGuiImplWeb.LoadTexture(atm, { id: atmTexId });
     };
-
+    
     // ratware image
     let ratTexId = ImGuiImplWeb.LoadTexture();
     const ratware = new Image();
@@ -20,44 +63,43 @@ const canvas = document.querySelector("#imgui-canvas");
     ratware.onload = () => {
         ImGuiImplWeb.LoadTexture(ratware, { id: ratTexId });
     };
-
+    
     function frame() {
         ImGuiImplWeb.BeginRender();
-
+        
         ImGui.Begin("about");
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n\n");
-        ImGui.Text("my time: {time}");
-        ImGui.Text("my lovely weather: {weather}");
+        ImGui.Text(`my time: ${currentTime}`);
+        ImGui.Text(`my lovely weather: ${currentWeather}`);
         ImGui.End();
-
+        
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff i made;");
+        
         if (ImGui.TreeNode("lithium's atm")) {
             ImGui.Text("cool deposit game i made using");
             ImGui.SameLine();
             if (ImGui.TextLink("regui")) globalThis.open("https://github.com/depthso/Dear-Regui", "_blank");
-
             ImGui.Text("game link:");
             ImGui.SameLine();
             if (ImGui.TextLink("https://www.roblox.com/games/106912201193396")) globalThis.open("https://www.roblox.com/games/106912201193396/", "_blank");
-
             ImGui.Image(new ImTextureRef(atmTexId), new ImVec2(atm.width / 1.3, atm.height / 1.3));
-
             ImGui.TreePop();
         }
+        
         if (ImGui.TreeNode("ratware")) {
             ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
             ImGui.Image(new ImTextureRef(ratTexId), new ImVec2(ratware.width / 1.7, ratware.height / 1.7));
             ImGui.Text("ratware isnt coming back any time soon (whole server dead :broken-heart:)")
             ImGui.TreePop();
         }
+        
         ImGui.Text("\ncheck back later for more thx");
-
         ImGui.End();
-
+        
         ImGuiImplWeb.EndRender();
         requestAnimationFrame(frame);
     }
-
+    
     requestAnimationFrame(frame);
 })();
