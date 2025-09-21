@@ -118,6 +118,11 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hello exterzas");
         ImGui.End();
+
+        // music player window
+        ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
+        ImGui.Text("hello music (so sad omg i haet myself)");
+        ImGui.End();
         
         ImGuiImplWeb.EndRender();
         requestAnimationFrame(frame);
