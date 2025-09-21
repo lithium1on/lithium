@@ -205,19 +205,19 @@ const canvas = document.querySelector("#imgui-canvas");
         // extras window
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
         if (ImGui.TreeNode("questions")) {
-            ImGui.Text("can i steal this? ");
+            ImGui.Text("can i steal this?");
             ImGui.SameLine(); 
             ImGui.TextDisabled("nuh uh");
 
-            ImGui.Text("are you a female ");
+            ImGui.Text("are you a female");
             ImGui.SameLine();
             ImGui.TextDisabled("think about it");
 
-            ImGui.Text("ur music sucks i wanna submit soem!! ");
+            ImGui.Text("ur music sucks i wanna submit soem!!");
             ImGui.SameLine();
             ImGui.TextDisabled("no my music doesnt suck grrr but if you wanna submit contact me lol");
 
-            ImGui.Text("lithium pls feet pics ");
+            ImGui.Text("lithium pls feet pics");
             ImGui.SameLine();
             if (ImGui.TextLink("here")) {
                 globalThis.open("assets/img/feetpics.gif", "_blank");
