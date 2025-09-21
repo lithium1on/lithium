@@ -19,6 +19,9 @@ canvas.height = 768;
 
 (async () => {
   await ImGuiImplWeb.Init({ canvas, enableDemos: false });
+  window.ImGui = ImGui;
+  window.ImGuiImplWeb = ImGuiImplWeb;
+
   console.log("ImGui exists:", typeof ImGui);
   console.log("ImGuiImplWeb exists:", typeof ImGuiImplWeb);
 
