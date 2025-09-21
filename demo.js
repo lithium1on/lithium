@@ -101,7 +101,7 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // links window
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.TextLink("roblox", globalThis.open("https://www.roblox.com/users/1/profile", "_blank"));
+        if (ImGui.TextLink("roblox")) globalThis.open("https://www.roblox.com/users/1", "_blank");
         ImGui.SameLine(": @lithium_1on");
         ImGui.End();
 
