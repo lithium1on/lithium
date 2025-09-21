@@ -47,7 +47,7 @@ const canvas = document.querySelector("#imgui-canvas");
         }
         if (ImGui.TreeNode("ratware")) {
             ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
-            ImGui.Image(new ImTextureRef(ratTexId), new ImVec2(ratware.width / 1.3, ratware.height / 1.3));
+            ImGui.Image(new ImTextureRef(ratTexId), new ImVec2(ratware.width / 1.7, ratware.height / 1.7));
             ImGui.Text("ratware isnt coming back any time soon (whole server dead :broken-heart:)")
             ImGui.TreePop();
         }
