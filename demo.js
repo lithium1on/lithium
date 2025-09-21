@@ -204,7 +204,59 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // extras window
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("nothing here yet");
+        if (ImGui.TreeNode("questions")) {
+            ImGui.Text("can i steal this? ");
+            ImGui.SameLine(); 
+            ImGui.TextDisabled("nuh uh");
+
+            ImGui.Text("are you a female ");
+            ImGui.SameLine();
+            ImGui.TextDisabled("think about it");
+
+            ImGui.Text("ur music sucks i wanna submit soem!! ");
+            ImGui.SameLine();
+            ImGui.TextDisabled("no my music doesnt suck grrr but if you wanna submit contact me lol");
+
+            ImGui.Text("lithium pls feet pics ");
+            ImGui.SameLine();
+            if (ImGui.TextLink("here")) {
+                globalThis.open("assets/img/feetpics.gif", "_blank");
+            }
+
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("minecraft server")) {
+            ImGui.Text("how to join:");
+            if (ImGui.TextLink("ip: mc.lithium.lat (click to copy)")) {
+                navigator.clipboard.writeText("mc.lithium.lat");
+            }
+            ImGui.Text("version: 1.21.8");
+            ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
+
+            ImGui.Spacing();
+            ImGui.Text("rules:");
+            ImGui.BulletText("cracks arent allowed, you pooron");
+            ImGui.BulletText("no griefing");
+            ImGui.BulletText("no hack clients!!");
+            ImGui.BulletText("more rules may be added, breaking any rule will revoke whitelist!");
+
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("quotes")) {
+            ImGui.Text("dm me on discord to add a quote");
+            ImGui.Spacing();
+
+            ImGui.Text('"we are gooners, not skibidies, and gooners don\'t..." - king');
+            ImGui.Text('"If cancer kills you it dies with you, it\'s not a loss. It\'s a draw." - zinc-carbon battery');
+            ImGui.Text('"all your base are belong to us" - Edwin Murray');
+            ImGui.Text('"if youre not tuff then youre not tuff" - Plague');
+            ImGui.Text('"a man who unironically chooses to build a cashgrab game as a replacement for developing exploits is homosexual" - Lily Phillips');
+            ImGui.Text('"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips');
+
+            ImGui.TreePop();
+        }
         ImGui.End();
 
         // music player window
