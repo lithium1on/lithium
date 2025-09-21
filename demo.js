@@ -26,7 +26,7 @@ import { ImGui, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
         }
 
         const data = ImageFileCache[path];
-        ImGui.Image(data.tex, ImGui.Vec2(width || data.w, height || data.h));
+        ImGui.Image(data.tex, [width || data.w, height || data.h]);
     }
 
     async function frame() {
