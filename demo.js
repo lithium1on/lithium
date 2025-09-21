@@ -67,7 +67,7 @@ const canvas = document.querySelector("#imgui-canvas");
     function frame() {
         ImGuiImplWeb.BeginRender();
         
-        ImGui.Begin("about");
+        ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n\n");
         ImGui.Text(`my time: ${currentTime}`);
         ImGui.Text(`my lovely weather: ${currentWeather}`);
