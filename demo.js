@@ -26,18 +26,16 @@ import { ImGui, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
         }
 
         const data = ImageFileCache[path];
-        ImGui.Image(data.tex, new ImGui.Vec2(width || data.w, height || data.h));
+        ImGui.Image(data.tex, ImGui.Vec2(width || data.w, height || data.h));
     }
 
-    function frame() {
+    async function frame() {
         ImGuiImplWeb.BeginRender();
 
-        // about
         ImGui.Begin("about");
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n\nmy time: {time}\nmy lovely weather: {weather}");
         ImGui.End();
 
-        // projects
         ImGui.Begin("projects");
         ImGui.Text('here are some pretty cool stuff i made;\n\n');
 
@@ -54,7 +52,7 @@ import { ImGui, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
                 globalThis.open("https://www.roblox.com/games/106912201193396/", "_blank");
             }
 
-            ImageFile("assets/img/atm.png", 256, 256);
+            await ImageFile("assets/img/atm.png", 256, 256);
 
             ImGui.TreePop();
         }
