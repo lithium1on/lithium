@@ -1,4 +1,4 @@
-import { ImGui, ImGuiImplWeb, ImTextureId } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
+import { ImGui, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
 
 (async () => {
     const myCanvas = document.querySelector("#imgui-canvas");
