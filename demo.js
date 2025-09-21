@@ -46,7 +46,6 @@ const canvas = document.querySelector("#imgui-canvas");
     loadweather();
     
     setInterval(loadtime, 1000);
-    
     setInterval(loadweather, 10 * 60 * 1000);
 
     let atmTexId = ImGuiImplWeb.LoadTexture();
