@@ -100,9 +100,36 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // links window
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
-        if (ImGui.TextLink("roblox")) globalThis.open("https://www.roblox.com/users/1", "_blank");
+        if (ImGui.TextLink("roblox")) globalThis.open("https://www.roblox.com/users/23073498", "_blank");
         ImGui.SameLine();
         ImGui.Text(": @lithium_1on");
+        if (ImGui.TextLink("youtube")) globalThis.open("https://www.youtube.com/@lithium.1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithium.1on");
+        if (ImGui.TextLink("tiktok")) globalThis.open("https://www.tiktok.com/@lithium.1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithium.1on");
+        if (ImGui.TextLink("twitch")) globalThis.open("https://twitch.tv/lithium1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithium1on");
+        if (ImGui.TextLink("kick")) globalThis.open("https://kick.com/lithiumion", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithiumion");
+        if (ImGui.TextLink("spotify")) globalThis.open("https://open.spotify.com/users/31jttr5tyy3jk5koz45n22dl3bf4", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": lithium");
+        if (ImGui.TextLink("soundcloud")) globalThis.open("https://soundcloud.com/lithium1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithium1on");
+        if (ImGui.TextLink("reddit")) globalThis.open("https://reddit.com/u/lithium_1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": u/lithium_1on");
+        if (ImGui.TextLink("github")) globalThis.open("https://github.com/lithium1on", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": @lithium1on");
+        if (ImGui.TextLink("namemc")) globalThis.open("https://namemc.com/profile/LithiumMC", "_blank");
+        ImGui.SameLine();
+        ImGui.Text(": LithiumMC");
         ImGui.End();
 
         // contact window
