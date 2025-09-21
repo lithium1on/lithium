@@ -16,7 +16,9 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGuiImplWeb.BeginRender();
 
         ImGui.Begin("about");
-        ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy");
+        ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n\n");
+        ImGui.Text("my time: {time}");
+        ImGui.Text("my lovely weather: {weather}");
         ImGui.End();
 
         ImGui.Begin("projects");
@@ -30,7 +32,7 @@ const canvas = document.querySelector("#imgui-canvas");
             ImGui.SameLine();
             if (ImGui.TextLink("https://www.roblox.com/games/106912201193396")) globalThis.open("https://www.roblox.com/games/106912201193396/", "_blank");
 
-            ImGui.Image(new ImTextureRef(texId), new ImVec2(img.width / 2, img.height / 2));
+            ImGui.Image(new ImTextureRef(texId), new ImVec2(img.width / 1.5, img.height / 1.5));
 
             ImGui.TreePop();
         }
