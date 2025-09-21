@@ -152,17 +152,64 @@ const canvas = document.querySelector("#imgui-canvas");
 
         // donations window
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("hello meoney");
+        ImGui.Text("paypal: ");
+        ImGui.SameLine();
+        if (ImGui.TextLink("here")) {
+            globalThis.open("https://paypal.me/lithiumionbattery", "_blank");
+        }
+
+        if (ImGui.TreeNode("litecoin")) {
+            if (ImGui.TextLink("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za")) {
+                navigator.clipboard.writeText("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za");
+            }
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("bitcoin")) {
+            if (ImGui.TextLink("bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p")) {
+                navigator.clipboard.writeText("bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p");
+            }
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("ethereum")) {
+            if (ImGui.TextLink("0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C")) {
+                navigator.clipboard.writeText("0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C");
+            }
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("monero")) {
+            if (ImGui.TextLink("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk")) {
+                navigator.clipboard.writeText("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk");
+            }
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("solana")) {
+            if (ImGui.TextLink("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf")) {
+                navigator.clipboard.writeText("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf");
+            }
+            ImGui.TreePop();
+        }
+
+        if (ImGui.TreeNode("xrp")) {
+            if (ImGui.TextLink("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc")) {
+                navigator.clipboard.writeText("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc");
+            }
+            ImGui.TreePop();
+        }
+
         ImGui.End();
 
         // extras window
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("hello exterzas");
+        ImGui.Text("nothing here yet");
         ImGui.End();
 
         // music player window
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("hello music (so sad omg i haet myself)");
+        ImGui.Text("soon!!");
         ImGui.End();
         
         ImGuiImplWeb.EndRender();
