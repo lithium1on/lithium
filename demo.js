@@ -1,23 +1,37 @@
-import { ImGui, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
-import { createImageBitmap } from 'https://unpkg.com/@mori2003/jsimgui@0.8.0';
+import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
+
+const canvas = document.querySelector("#imgui-canvas");
 
 (async () => {
-    const myCanvas = document.querySelector("#imgui-canvas");
-    await ImGuiImplWeb.Init({ canvas: myCanvas, enableDemos: true });
+    await ImGuiImplWeb.Init({ canvas, enableDemos: false });
 
-    const img = await createImageBitmap(await fetch("assets/img/atm.png").then(res => res.blob()));
-    const tex = ImGuiImplWeb.CreateTextureFromImage(img);
-    const texId = tex ? tex.id : null;
+    let texId = ImGuiImplWeb.LoadTexture(); 
+    const img = new Image();
+    img.src = "assets/img/atm.png";
+    img.onload = () => {
+        ImGuiImplWeb.LoadTexture(img, { id: texId });
+    };
 
     function frame() {
         ImGuiImplWeb.BeginRender();
-        ImGui.Begin("Image Example");
-        if (texId) {
-            ImGui.Image(texId, [img.width, img.height]);
-        } else {
-            ImGui.Text("Failed to load image.");
+
+        ImGui.Begin("projects");
+        ImGui.Text("here are some pretty cool stuff i made;");
+        if (ImGui.TreeNode("lithium's atm")) {
+            ImGui.Text("cool deposit game i made using ");
+            ImGui.SameLine();
+            if (ImGui.TextLink("regui")) globalThis.open("https://github.com/depthso/Dear-Regui", "_blank");
+
+            ImGui.Text("game link: ");
+            ImGui.SameLine();
+            if (ImGui.TextLink("roblox.com/games/106912201193396")) globalThis.open("https://www.roblox.com/games/106912201193396/", "_blank");
+
+            ImGui.Image(new ImTextureRef(texId), new ImVec2(img.width, img.height));
+
+            ImGui.TreePop();
         }
         ImGui.End();
+
         ImGuiImplWeb.EndRender();
         requestAnimationFrame(frame);
     }
