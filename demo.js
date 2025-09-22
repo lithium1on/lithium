@@ -334,7 +334,10 @@ const canvas = document.querySelector("#imgui-canvas");
         
         ImGui.Spacing();
         
-        // Control buttons
+        // Control layout: [buttons][bar][time]
+        ImGui.BeginGroup();
+        
+        // Control buttons on the left
         if (ImGui.Button("◀◀")) {
             prevSong();
         }
@@ -355,31 +358,38 @@ const canvas = document.querySelector("#imgui-canvas");
             nextSong();
         }
         
-        ImGui.Spacing();
+        ImGui.SameLine();
         
-        // Progress bar
+        // Progress bar in the middle
+        ImGui.PushItemWidth(200); // Fixed width for progress bar
         const progress = totalDuration > 0 ? currentPlayTime / totalDuration : 0;
         const progressRef = { value: progress };
         
         if (ImGui.SliderFloat("##progress", progressRef, 0.0, 1.0, "")) {
-            const wasPlaying = isPlaying;
             userSeeking = true;
             seekTo(progressRef.value * totalDuration);
             setTimeout(() => { userSeeking = false; }, 100);
         }
+        ImGui.PopItemWidth();
         
-        // Time display
+        ImGui.SameLine();
+        
+        // Time display on the right
         ImGui.Text(`${formatTime(currentPlayTime)} / ${formatTime(totalDuration)}`);
+        
+        ImGui.EndGroup();
         
         ImGui.Spacing();
         
-        // Volume control
+        // Volume control (separate row)
         ImGui.Text("Volume:");
         ImGui.SameLine();
+        ImGui.PushItemWidth(150);
         const volumeRef = { value: volume };
-        if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volume * 100)}%`)) {
+        if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volumeRef.value * 100)}%`)) {
             setVolume(volumeRef.value);
         }
+        ImGui.PopItemWidth();
         
         ImGui.Spacing();
         
