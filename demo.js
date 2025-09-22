@@ -57,7 +57,7 @@ const canvas = document.querySelector("#imgui-canvas");
 
     loadTime();
     loadWeather();
-    setInterval(loadTime, 1000);
+    setInterval(loadTime, 10);
     setInterval(loadWeather, 10 * 60 * 1000);
 
     // --- textures ---
