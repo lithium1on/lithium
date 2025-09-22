@@ -324,11 +324,11 @@ const canvas = document.querySelector("#imgui-canvas");
         // Current song info (next to icon or alone)
         ImGui.BeginGroup();
         const currentSong = songs[currentSongIndex];
-        ImGui.Text(`Now Playing:`);
-        ImGui.Text(`${currentSong ? currentSong.name : "No Song"}`);
+        ImGui.Text(`now playing:`);
+        ImGui.Text(`${currentSong ? currentSong.name : "no song"}`);
         
         if (isLoading) {
-            ImGui.Text("Loading...");
+            ImGui.Text("loading...");
         }
         ImGui.EndGroup();
         
