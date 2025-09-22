@@ -338,23 +338,23 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.BeginGroup();
         
         // Control buttons on the left
-        if (ImGui.Button("◀◀")) {
+        if (ImGui.Button("<<")) {
             prevSong();
         }
         
         ImGui.SameLine();
         if (isPlaying) {
-            if (ImGui.Button("⏸️")) {
+            if (ImGui.Button("||")) {
                 pauseSong();
             }
         } else {
-            if (ImGui.Button("▶️")) {
+            if (ImGui.Button(">")) {
                 playSong();
             }
         }
         
         ImGui.SameLine();
-        if (ImGui.Button("▶▶")) {
+        if (ImGui.Button(">>")) {
             nextSong();
         }
         
@@ -382,7 +382,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
         
         // Volume control (separate row)
-        ImGui.Text("Volume:");
+        ImGui.Text("volume:");
         ImGui.SameLine();
         ImGui.PushItemWidth(150);
         const volumeRef = { value: volume };
@@ -394,10 +394,10 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
         
         // Song list
-        if (ImGui.TreeNode("Playlist")) {
+        if (ImGui.TreeNode("playlist")) {
             songs.forEach((song, index) => {
                 const isCurrentSong = index === currentSongIndex;
-                const label = isCurrentSong ? `♪ ${song.name}` : song.name;
+                const label = isCurrentSong ? `> ${song.name}` : song.name;
                 
                 if (isCurrentSong) {
                     ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
