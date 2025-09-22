@@ -19,16 +19,16 @@ const canvas = document.querySelector("#imgui-canvas");
     let userSeeking = false;
 
     const songs = [
-        { name: "Ankol", file: "assets/audio/ankol.opus" },
-        { name: "Devil", file: "assets/audio/devil.opus" },
-        { name: "Moron", file: "assets/audio/moron.opus" },
-        { name: "Posted Up", file: "assets/audio/postedup.opus" },
-        { name: "Superstar", file: "assets/audio/superstar.opus" },
-        { name: "KYS", file: "assets/audio/kys.opus" },
-        { name: "HKC", file: "assets/audio/hkc.opus" },
-        { name: "Notice", file: "assets/audio/notice.opus" },
-        { name: "Edgy", file: "assets/audio/edgy.opus" },
-        { name: "TIU", file: "assets/audio/tiu.opus" }
+        { name: "Ankol", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.png" },
+        { name: "Devil", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.png" },
+        { name: "Moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.png" },
+        { name: "Posted Up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.png" },
+        { name: "Superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.png" },
+        { name: "KYS", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.png" },
+        { name: "HKC", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.png" },
+        { name: "Notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.png" },
+        { name: "Edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.png" },
+        { name: "TIU", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.png" }
     ];
 
     // --- Music Player Functions ---
@@ -194,6 +194,16 @@ const canvas = document.querySelector("#imgui-canvas");
     // --- textures ---
     const atm = loadTexture("assets/img/atm.png");
     const ratware = loadTexture("assets/img/ratware.png");
+    
+    // --- music icons ---
+    const musicIcons = {};
+    songs.forEach((song, index) => {
+        if (song.icon) {
+            musicIcons[index] = loadTexture(song.icon);
+        } else {
+            console.log(`No icon found for song: ${song.name} - expected at ${song.icon || 'assets/img/music/' + song.name.toLowerCase().replace(/\s+/g, '') + '.png'}`);
+        }
+    });
 
     // --- frame loop ---
     function frame() {
@@ -303,13 +313,24 @@ const canvas = document.querySelector("#imgui-canvas");
         // MUSIC PLAYER
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         
-        // Current song display
+        // Album art / icon
+        const currentIcon = musicIcons[currentSongIndex];
+        if (currentIcon && currentIcon.img.complete) {
+            const iconSize = 80;
+            ImGui.Image(new ImTextureRef(currentIcon.id), new ImVec2(iconSize, iconSize));
+            ImGui.SameLine();
+        }
+        
+        // Current song info (next to icon or alone)
+        ImGui.BeginGroup();
         const currentSong = songs[currentSongIndex];
-        ImGui.Text(`Now Playing: ${currentSong ? currentSong.name : "No Song"}`);
+        ImGui.Text(`Now Playing:`);
+        ImGui.Text(`${currentSong ? currentSong.name : "No Song"}`);
         
         if (isLoading) {
             ImGui.Text("Loading...");
         }
+        ImGui.EndGroup();
         
         ImGui.Spacing();
         
@@ -338,12 +359,12 @@ const canvas = document.querySelector("#imgui-canvas");
         
         // Progress bar
         const progress = totalDuration > 0 ? currentPlayTime / totalDuration : 0;
-        let newProgress = progress;
+        const progressRef = { value: progress };
         
-        if (ImGui.SliderFloat("##progress", [newProgress], 0.0, 1.0, "")) {
+        if (ImGui.SliderFloat("##progress", progressRef, 0.0, 1.0, "")) {
             const wasPlaying = isPlaying;
             userSeeking = true;
-            seekTo(newProgress * totalDuration);
+            seekTo(progressRef.value * totalDuration);
             setTimeout(() => { userSeeking = false; }, 100);
         }
         
@@ -355,9 +376,9 @@ const canvas = document.querySelector("#imgui-canvas");
         // Volume control
         ImGui.Text("Volume:");
         ImGui.SameLine();
-        let newVolume = volume;
-        if (ImGui.SliderFloat("##volume", [newVolume], 0.0, 1.0, `${Math.round(volume * 100)}%`)) {
-            setVolume(newVolume);
+        const volumeRef = { value: volume };
+        if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volume * 100)}%`)) {
+            setVolume(volumeRef.value);
         }
         
         ImGui.Spacing();
@@ -369,7 +390,7 @@ const canvas = document.querySelector("#imgui-canvas");
                 const label = isCurrentSong ? `♪ ${song.name}` : song.name;
                 
                 if (isCurrentSong) {
-                    ImGui.PushStyleColor(ImGui.Col.Text, [0.4, 1.0, 0.4, 1.0]);
+                    ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
                 }
                 
                 if (ImGui.Selectable(label, isCurrentSong)) {
