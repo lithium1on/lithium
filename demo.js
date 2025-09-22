@@ -25,17 +25,6 @@ const canvas = document.querySelector("#imgui-canvas");
         return { id, img };
     };
 
-    // --- random window placement ---
-    const windowPositions = {};
-    function getRandomWindowPos(name) {
-        if (!windowPositions[name]) {
-            const x = Math.random() * 800 + 50; // adjust based on canvas size
-            const y = Math.random() * 500 + 50;
-            windowPositions[name] = new ImVec2(x, y);
-        }
-        return windowPositions[name];
-    }
-
     // --- time & weather ---
     async function loadWeather() {
         try {
@@ -75,20 +64,51 @@ const canvas = document.querySelector("#imgui-canvas");
     const atm = loadTexture("assets/img/atm.png");
     const ratware = loadTexture("assets/img/ratware.png");
 
+    // --- random scatter system ---
+    const windowRegistry = {};
+    function placeWindow(name) {
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        // measure size if not stored
+        const size = ImGui.GetWindowSize();
+        if (!windowRegistry[name]) {
+            let x, y, tries = 0;
+            do {
+                x = Math.floor(Math.random() * (canvasWidth - size.x - 20)) + 10;
+                y = Math.floor(Math.random() * (canvasHeight - size.y - 20)) + 10;
+
+                // check overlap
+                const overlap = Object.values(windowRegistry).some(pos => {
+                    return (
+                        x < pos.x + pos.w &&
+                        x + size.x > pos.x &&
+                        y < pos.y + pos.h &&
+                        y + size.y > pos.y
+                    );
+                });
+                if (!overlap) break;
+                tries++;
+            } while (tries < 100);
+
+            windowRegistry[name] = { x, y, w: size.x, h: size.y };
+            ImGui.SetWindowPos(new ImVec2(x, y), ImGui.Cond.Once);
+        }
+    }
+
     // --- frame loop ---
     function frame() {
         ImGuiImplWeb.BeginRender();
 
         // about
-        ImGui.SetNextWindowPos(getRandomWindowPos("about"));
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n");
         ImGui.Text(`my time: ${currentTime}`);
         ImGui.Text(`my lovely weather: ${currentWeather}`);
+        placeWindow("about");
         ImGui.End();
 
         // projects
-        ImGui.SetNextWindowPos(getRandomWindowPos("projects"));
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff i made;");
 
@@ -107,10 +127,10 @@ const canvas = document.querySelector("#imgui-canvas");
         }
 
         ImGui.Text("\ncheck back later for more thx");
+        placeWindow("projects");
         ImGui.End();
 
         // links
-        ImGui.SetNextWindowPos(getRandomWindowPos("links"));
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
         link("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
         link("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
@@ -122,19 +142,19 @@ const canvas = document.querySelector("#imgui-canvas");
         link("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
         link("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
         link("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
+        placeWindow("links");
         ImGui.End();
 
         // contact
-        ImGui.SetNextWindowPos(getRandomWindowPos("contact"));
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("email:"); ImGui.SameLine(); link("contact@lithium.lat", "mailto:contact@lithium.lat");
         ImGui.Text("discord:"); ImGui.SameLine(); link("@lithium_1on", "https://discord.com/users/1284236064420003886");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); link("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); link("@lithium1on", "https://t.me/lithium1on");
+        placeWindow("contact");
         ImGui.End();
 
         // donations
-        ImGui.SetNextWindowPos(getRandomWindowPos("donations"));
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("paypal:"); ImGui.SameLine(); link("here", "https://paypal.me/lithiumionbattery");
         if (ImGui.TreeNode("litecoin")) { copyable("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
@@ -143,10 +163,10 @@ const canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("monero")) { copyable("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
         if (ImGui.TreeNode("solana")) { copyable("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
         if (ImGui.TreeNode("xrp")) { copyable("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
+        placeWindow("donations");
         ImGui.End();
 
         // extras
-        ImGui.SetNextWindowPos(getRandomWindowPos("extras"));
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
         if (ImGui.TreeNode("questions")) {
             ImGui.Text("can i steal this?"); ImGui.SameLine(); ImGui.TextDisabled("nuh uh");
@@ -185,12 +205,13 @@ const canvas = document.querySelector("#imgui-canvas");
             quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
         }
+        placeWindow("extras");
         ImGui.End();
 
         // music player
-        ImGui.SetNextWindowPos(getRandomWindowPos("music player"));
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("soon!! i have to figure out how to make it work :)");
+        placeWindow("music player");
         ImGui.End();
 
         ImGuiImplWeb.EndRender();
