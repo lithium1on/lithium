@@ -25,6 +25,17 @@ const canvas = document.querySelector("#imgui-canvas");
         return { id, img };
     };
 
+    // --- random window placement ---
+    const windowPositions = {};
+    function getRandomWindowPos(name) {
+        if (!windowPositions[name]) {
+            const x = Math.random() * 800 + 50; // adjust based on canvas size
+            const y = Math.random() * 500 + 50;
+            windowPositions[name] = new ImVec2(x, y);
+        }
+        return windowPositions[name];
+    }
+
     // --- time & weather ---
     async function loadWeather() {
         try {
@@ -69,6 +80,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGuiImplWeb.BeginRender();
 
         // about
+        ImGui.SetNextWindowPos(getRandomWindowPos("about"));
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n");
         ImGui.Text(`my time: ${currentTime}`);
@@ -76,6 +88,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // projects
+        ImGui.SetNextWindowPos(getRandomWindowPos("projects"));
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff i made;");
 
@@ -97,6 +110,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // links
+        ImGui.SetNextWindowPos(getRandomWindowPos("links"));
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
         link("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
         link("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
@@ -111,6 +125,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // contact
+        ImGui.SetNextWindowPos(getRandomWindowPos("contact"));
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("email:"); ImGui.SameLine(); link("contact@lithium.lat", "mailto:contact@lithium.lat");
         ImGui.Text("discord:"); ImGui.SameLine(); link("@lithium_1on", "https://discord.com/users/1284236064420003886");
@@ -119,6 +134,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // donations
+        ImGui.SetNextWindowPos(getRandomWindowPos("donations"));
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("paypal:"); ImGui.SameLine(); link("here", "https://paypal.me/lithiumionbattery");
         if (ImGui.TreeNode("litecoin")) { copyable("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
@@ -130,6 +146,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // extras
+        ImGui.SetNextWindowPos(getRandomWindowPos("extras"));
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
         if (ImGui.TreeNode("questions")) {
             ImGui.Text("can i steal this?"); ImGui.SameLine(); ImGui.TextDisabled("nuh uh");
@@ -171,6 +188,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         // music player
+        ImGui.SetNextWindowPos(getRandomWindowPos("music player"));
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("soon!! i have to figure out how to make it work :)");
         ImGui.End();
