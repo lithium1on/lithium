@@ -61,10 +61,9 @@ const canvas = document.querySelector("#imgui-canvas");
     ];
 
     const sizes = {};
-    const radii = {};
     const positions = {};
     const applied = {};
-    let placed = false;
+    let positioned = false;
 
     function drawAbout() {
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n");
@@ -170,88 +169,54 @@ const canvas = document.querySelector("#imgui-canvas");
         else if (name === "music player") drawMusic();
     }
 
-    function measureAllSizes() {
+    function measureSizesOnce() {
         for (let i = 0; i < windowNames.length; i++) {
             const name = windowNames[i];
             if (!sizes[name]) {
-                ImGui.Begin(name, null, ImGui.WindowFlags.AlwaysAutoResize);
+                ImGui.Begin(name, null, ImGui.WindowFlags.AlwaysAutoResize | ImGui.WindowFlags.NoSavedSettings);
                 drawWindowByName(name);
                 const s = ImGui.GetWindowSize();
-                sizes[name] = { x: s.x, y: s.y };
+                sizes[name] = { w: Math.max(80, s.x), h: Math.max(32, s.y) };
                 ImGui.End();
             }
         }
-        if (Object.keys(sizes).length === windowNames.length) {
-            for (const n of windowNames) {
-                const w = sizes[n].x, h = sizes[n].y;
-                radii[n] = Math.hypot(w / 2, h / 2);
-            }
-            return true;
-        }
-        return false;
     }
 
-    function tryPlaceCircle() {
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const centerX = canvasWidth / 2;
-        const centerY = canvasHeight / 2;
-        const maxRi = Math.max(...windowNames.map(n => radii[n]));
-        let R = Math.min(centerX, centerY) - maxRi - 10;
-        if (R < 50) R = 50;
+    function placeRandomNonOverlapping() {
+        const canvasWidth = Math.max(100, canvas.width || canvas.clientWidth);
+        const canvasHeight = Math.max(100, canvas.height || canvas.clientHeight);
         const margin = 8;
-        let success = false;
-        let attempts = 0;
-        while (!success && attempts < 30) {
-            attempts++;
-            const placedPoints = [];
-            let failed = false;
-            for (let i = 0; i < windowNames.length; i++) {
-                const name = windowNames[i];
-                let placedThis = false;
-                for (let ang = 0; ang < Math.PI * 2; ang += 0.05) {
-                    const x = centerX + R * Math.cos(ang);
-                    const y = centerY + R * Math.sin(ang);
-                    if (x - radii[name] < 5 || x + radii[name] > canvasWidth - 5 || y - radii[name] < 5 || y + radii[name] > canvasHeight - 5) continue;
-                    let ok = true;
-                    for (const p of placedPoints) {
-                        const d = Math.hypot(p.x - x, p.y - y);
-                        if (d < p.r + radii[name] + margin) { ok = false; break; }
-                    }
-                    if (ok) {
-                        placedPoints.push({ name, x, y, r: radii[name] });
-                        placedThis = true;
-                        break;
-                    }
+        const placedRects = [];
+        for (let i = 0; i < windowNames.length; i++) {
+            const name = windowNames[i];
+            const w = sizes[name].w;
+            const h = sizes[name].h;
+            let found = false;
+            const maxTries = 400;
+            for (let t = 0; t < maxTries; t++) {
+                const cx = Math.floor(Math.random() * (canvasWidth - w - margin * 2)) + w / 2 + margin;
+                const cy = Math.floor(Math.random() * (canvasHeight - h - margin * 2)) + h / 2 + margin;
+                const rect = { x1: cx - w / 2, y1: cy - h / 2, x2: cx + w / 2, y2: cy + h / 2, cx, cy, w, h };
+                let ok = true;
+                for (const r of placedRects) {
+                    if (!(rect.x2 + margin <= r.x1 || rect.x1 - margin >= r.x2 || rect.y2 + margin <= r.y1 || rect.y1 - margin >= r.y2)) { ok = false; break; }
                 }
-                if (!placedThis) { failed = true; break; }
+                if (ok) { positions[name] = { x: rect.cx, y: rect.cy }; placedRects.push(rect); found = true; break; }
             }
-            if (!failed) {
-                for (const p of placedPoints) positions[p.name] = { x: p.x, y: p.y };
-                success = true;
-                break;
+            if (!found) {
+                const cx = Math.floor(Math.random() * (canvasWidth - w - margin * 2)) + w / 2 + margin;
+                const cy = Math.floor(Math.random() * (canvasHeight - h - margin * 2)) + h / 2 + margin;
+                positions[name] = { x: cx, y: cy };
+                placedRects.push({ x1: cx - w / 2, y1: cy - h / 2, x2: cx + w / 2, y2: cy + h / 2, cx, cy, w, h });
             }
-            R = R + 30;
-            if (R > Math.min(centerX, centerY) - 5) { break; }
+            applied[name] = false;
         }
-        if (!success) {
-            const fallbackStep = 150;
-            let angStep = (2 * Math.PI) / windowNames.length;
-            for (let i = 0; i < windowNames.length; i++) {
-                const angle = angStep * i;
-                const x = centerX + fallbackStep * Math.cos(angle);
-                const y = centerY + fallbackStep * Math.sin(angle);
-                positions[windowNames[i]] = { x, y };
-            }
-        }
-        for (const n of windowNames) applied[n] = false;
-        placed = true;
+        positioned = true;
     }
 
-    function applyIfReady(name) {
+    function applyPositionIfNeeded(name) {
         if (positions[name] && !applied[name]) {
-            const p = positions[name];
-            ImGui.SetNextWindowPos(new ImVec2(p.x, p.y), ImGui.Cond.Once, new ImVec2(0.5, 0.5));
+            ImGui.SetNextWindowPos(new ImVec2(positions[name].x, positions[name].y), ImGui.Cond.Once, new ImVec2(0.5, 0.5));
             applied[name] = true;
         }
     }
@@ -259,14 +224,14 @@ const canvas = document.querySelector("#imgui-canvas");
     function frame() {
         ImGuiImplWeb.BeginRender();
 
-        if (!placed) {
-            measureAllSizes();
-            if (Object.keys(sizes).length === windowNames.length) tryPlaceCircle();
+        if (!positioned) {
+            measureSizesOnce();
+            if (Object.keys(sizes).length === windowNames.length) placeRandomNonOverlapping();
         }
 
         for (let i = 0; i < windowNames.length; i++) {
             const name = windowNames[i];
-            applyIfReady(name);
+            applyPositionIfNeeded(name);
             ImGui.Begin(name, null, ImGui.WindowFlags.AlwaysAutoResize);
             drawWindowByName(name);
             ImGui.End();
