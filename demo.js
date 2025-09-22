@@ -1,4 +1,4 @@
-import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.8.0";
+import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui";
 
 const canvas = document.querySelector("#imgui-canvas");
 
@@ -64,48 +64,45 @@ const canvas = document.querySelector("#imgui-canvas");
     const atm = loadTexture("assets/img/atm.png");
     const ratware = loadTexture("assets/img/ratware.png");
 
-    // --- random scatter system ---
-    const windowRegistry = {};
-    function placeWindow(name) {
+    // --- circle placement system ---
+    const windowNames = [
+        "about",
+        "projects",
+        "links",
+        "contact",
+        "donations",
+        "extras",
+        "music player"
+    ];
+    const placed = new Set();
+
+    function placeWindowsInCircle() {
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
 
-        // measure size if not stored
-        const size = ImGui.GetWindowSize();
-        if (!windowRegistry[name]) {
-            let x, y, tries = 0;
-            do {
-                x = Math.floor(Math.random() * (canvasWidth - size.x - 20)) + 10;
-                y = Math.floor(Math.random() * (canvasHeight - size.y - 20)) + 10;
+        const centerX = canvasWidth / 2;
+        const centerY = canvasHeight / 2;
 
-                // check overlap
-                const overlap = Object.values(windowRegistry).some(pos => {
-                    return (
-                        x < pos.x + pos.w &&
-                        x + size.x > pos.x &&
-                        y < pos.y + pos.h &&
-                        y + size.y > pos.y
-                    );
-                });
-                if (!overlap) break;
-                tries++;
-            } while (tries < 100);
-
-            windowRegistry[name] = { x, y, w: size.x, h: size.y };
-            ImGui.SetWindowPos(new ImVec2(x, y), ImGui.Cond.Once);
-        }
+        const n = windowNames.length;
+        const radius = Math.min(canvasWidth, canvasHeight) / 2.5; // fit inside screen
+        windowNames.forEach((name, i) => {
+            const angle = (2 * Math.PI * i) / n;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            ImGui.SetNextWindowPos(new ImVec2(x, y), ImGui.Cond.Once, new ImVec2(0.5, 0.5));
+        });
     }
 
     // --- frame loop ---
     function frame() {
         ImGuiImplWeb.BeginRender();
+        placeWindowsInCircle();
 
         // about
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n");
         ImGui.Text(`my time: ${currentTime}`);
         ImGui.Text(`my lovely weather: ${currentWeather}`);
-        placeWindow("about");
         ImGui.End();
 
         // projects
@@ -127,7 +124,6 @@ const canvas = document.querySelector("#imgui-canvas");
         }
 
         ImGui.Text("\ncheck back later for more thx");
-        placeWindow("projects");
         ImGui.End();
 
         // links
@@ -142,7 +138,6 @@ const canvas = document.querySelector("#imgui-canvas");
         link("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
         link("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
         link("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
-        placeWindow("links");
         ImGui.End();
 
         // contact
@@ -151,7 +146,6 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Text("discord:"); ImGui.SameLine(); link("@lithium_1on", "https://discord.com/users/1284236064420003886");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); link("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); link("@lithium1on", "https://t.me/lithium1on");
-        placeWindow("contact");
         ImGui.End();
 
         // donations
@@ -163,7 +157,6 @@ const canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("monero")) { copyable("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
         if (ImGui.TreeNode("solana")) { copyable("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
         if (ImGui.TreeNode("xrp")) { copyable("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
-        placeWindow("donations");
         ImGui.End();
 
         // extras
@@ -205,13 +198,11 @@ const canvas = document.querySelector("#imgui-canvas");
             quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
         }
-        placeWindow("extras");
         ImGui.End();
 
         // music player
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("soon!! i have to figure out how to make it work :)");
-        placeWindow("music player");
         ImGui.End();
 
         ImGuiImplWeb.EndRender();
