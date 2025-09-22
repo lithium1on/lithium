@@ -19,16 +19,16 @@ const canvas = document.querySelector("#imgui-canvas");
     let userSeeking = false;
 
     const songs = [
-        { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.png" },
-        { name: "devil", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.png" },
-        { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.png" },
-        { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.png" },
-        { name: "superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.png" },
-        { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.png" },
-        { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.png" },
-        { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.png" },
-        { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.png" },
-        { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.png" }
+        { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
+        { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.jpg" },
+        { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg" },
+        { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg" },
+        { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg" },
+        { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg" },
+        { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg" },
+        { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.jpg" },
+        { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg" },
+        { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" }
     ];
 
     // --- Music Player Functions ---
