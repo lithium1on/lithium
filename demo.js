@@ -8,6 +8,137 @@ const canvas = document.querySelector("#imgui-canvas");
     let currentTime = "loading...";
     let currentWeather = "loading...";
 
+    // --- Music Player State ---
+    let audio = null;
+    let isPlaying = false;
+    let currentSongIndex = 0;
+    let volume = 0.3;
+    let currentPlayTime = 0;
+    let totalDuration = 0;
+    let isLoading = false;
+    let userSeeking = false;
+
+    const songs = [
+        { name: "Ankol", file: "assets/audio/ankol.opus" },
+        { name: "Devil", file: "assets/audio/devil.opus" },
+        { name: "Moron", file: "assets/audio/moron.opus" },
+        { name: "Posted Up", file: "assets/audio/postedup.opus" },
+        { name: "Superstar", file: "assets/audio/superstar.opus" },
+        { name: "KYS", file: "assets/audio/kys.opus" },
+        { name: "HKC", file: "assets/audio/hkc.opus" },
+        { name: "Notice", file: "assets/audio/notice.opus" },
+        { name: "Edgy", file: "assets/audio/edgy.opus" },
+        { name: "TIU", file: "assets/audio/tiu.opus" }
+    ];
+
+    // --- Music Player Functions ---
+    function initAudio() {
+        if (audio) {
+            audio.pause();
+            audio = null;
+        }
+        
+        audio = new Audio();
+        audio.volume = volume;
+        
+        audio.addEventListener('loadstart', () => {
+            isLoading = true;
+        });
+        
+        audio.addEventListener('loadedmetadata', () => {
+            totalDuration = audio.duration || 0;
+            isLoading = false;
+        });
+        
+        audio.addEventListener('timeupdate', () => {
+            if (!userSeeking) {
+                currentPlayTime = audio.currentTime || 0;
+            }
+        });
+        
+        audio.addEventListener('ended', () => {
+            nextSong();
+        });
+        
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+        });
+        
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+        });
+    }
+
+    function loadCurrentSong() {
+        if (!audio) initAudio();
+        
+        const song = songs[currentSongIndex];
+        if (song) {
+            audio.src = song.file;
+            currentPlayTime = 0;
+            totalDuration = 0;
+        }
+    }
+
+    function playSong() {
+        if (!audio) {
+            initAudio();
+            loadCurrentSong();
+        }
+        
+        audio.play().catch(e => {
+            console.log('Audio play blocked:', e);
+        });
+    }
+
+    function pauseSong() {
+        if (audio) {
+            audio.pause();
+        }
+    }
+
+    function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadCurrentSong();
+        if (isPlaying) {
+            playSong();
+        }
+    }
+
+    function prevSong() {
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        loadCurrentSong();
+        if (isPlaying) {
+            playSong();
+        }
+    }
+
+    function setVolume(newVolume) {
+        volume = Math.max(0, Math.min(1, newVolume));
+        if (audio) {
+            audio.volume = volume;
+        }
+    }
+
+    function seekTo(time) {
+        if (audio && totalDuration > 0) {
+            const clampedTime = Math.max(0, Math.min(totalDuration, time));
+            audio.currentTime = clampedTime;
+            currentPlayTime = clampedTime;
+        }
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "00:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Initialize first song
+    initAudio();
+    loadCurrentSong();
+
     // --- helpers ---
     const link = (label, url) => {
         if (ImGui.TextLink(label)) globalThis.open(url, "_blank");
@@ -169,9 +300,95 @@ const canvas = document.querySelector("#imgui-canvas");
         }
         ImGui.End();
 
-        // music player
+        // MUSIC PLAYER
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("soon!! i have to figure out how to make it work :)");
+        
+        // Current song display
+        const currentSong = songs[currentSongIndex];
+        ImGui.Text(`Now Playing: ${currentSong ? currentSong.name : "No Song"}`);
+        
+        if (isLoading) {
+            ImGui.Text("Loading...");
+        }
+        
+        ImGui.Spacing();
+        
+        // Control buttons
+        if (ImGui.Button("◀◀")) {
+            prevSong();
+        }
+        
+        ImGui.SameLine();
+        if (isPlaying) {
+            if (ImGui.Button("⏸️")) {
+                pauseSong();
+            }
+        } else {
+            if (ImGui.Button("▶️")) {
+                playSong();
+            }
+        }
+        
+        ImGui.SameLine();
+        if (ImGui.Button("▶▶")) {
+            nextSong();
+        }
+        
+        ImGui.Spacing();
+        
+        // Progress bar
+        const progress = totalDuration > 0 ? currentPlayTime / totalDuration : 0;
+        let newProgress = progress;
+        
+        if (ImGui.SliderFloat("##progress", [newProgress], 0.0, 1.0, "")) {
+            const wasPlaying = isPlaying;
+            userSeeking = true;
+            seekTo(newProgress * totalDuration);
+            setTimeout(() => { userSeeking = false; }, 100);
+        }
+        
+        // Time display
+        ImGui.Text(`${formatTime(currentPlayTime)} / ${formatTime(totalDuration)}`);
+        
+        ImGui.Spacing();
+        
+        // Volume control
+        ImGui.Text("Volume:");
+        ImGui.SameLine();
+        let newVolume = volume;
+        if (ImGui.SliderFloat("##volume", [newVolume], 0.0, 1.0, `${Math.round(volume * 100)}%`)) {
+            setVolume(newVolume);
+        }
+        
+        ImGui.Spacing();
+        
+        // Song list
+        if (ImGui.TreeNode("Playlist")) {
+            songs.forEach((song, index) => {
+                const isCurrentSong = index === currentSongIndex;
+                const label = isCurrentSong ? `♪ ${song.name}` : song.name;
+                
+                if (isCurrentSong) {
+                    ImGui.PushStyleColor(ImGui.Col.Text, [0.4, 1.0, 0.4, 1.0]);
+                }
+                
+                if (ImGui.Selectable(label, isCurrentSong)) {
+                    if (index !== currentSongIndex) {
+                        currentSongIndex = index;
+                        loadCurrentSong();
+                        if (isPlaying) {
+                            playSong();
+                        }
+                    }
+                }
+                
+                if (isCurrentSong) {
+                    ImGui.PopStyleColor();
+                }
+            });
+            ImGui.TreePop();
+        }
+        
         ImGui.End();
 
         ImGuiImplWeb.EndRender();
