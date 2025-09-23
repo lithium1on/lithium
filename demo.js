@@ -17,7 +17,7 @@ const canvas = document.querySelector("#imgui-canvas");
     let totalDuration = 0;
     let isLoading = false;
     let userSeeking = false;
-    let isLooping = true; // Add loop state
+    let isLooping = true; // Always loop - no option needed
 
     const songs = [
         { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
@@ -59,15 +59,11 @@ const canvas = document.querySelector("#imgui-canvas");
         });
         
         audio.addEventListener('ended', () => {
-            if (isLooping) {
-                // Loop the current song
-                audio.currentTime = 0;
-                audio.play().catch(e => {
-                    console.log('Audio loop play blocked:', e);
-                });
-            } else {
-                nextSong();
-            }
+            // Always loop the current song
+            audio.currentTime = 0;
+            audio.play().catch(e => {
+                console.log('Audio loop play blocked:', e);
+            });
         });
         
         audio.addEventListener('play', () => {
@@ -374,16 +370,15 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.SameLine();
         
         // Progress bar in the middle
-        ImGui.PushItemWidth(200); // Fixed width for progress bar
         const progress = totalDuration > 0 ? currentPlayTime / totalDuration : 0;
         const progressRef = { value: progress };
         
+        ImGui.SetNextItemWidth(200); // Use SetNextItemWidth instead
         if (ImGui.SliderFloat("##progress", progressRef, 0.0, 1.0, "")) {
             userSeeking = true;
             seekTo(progressRef.value * totalDuration);
             setTimeout(() => { userSeeking = false; }, 100);
         }
-        ImGui.PopItemWidth();
         
         ImGui.SameLine();
         
@@ -394,22 +389,13 @@ const canvas = document.querySelector("#imgui-canvas");
         
         ImGui.Spacing();
         
-        // Volume control and loop toggle (same row)
+        // Volume control (separate row)
         ImGui.Text("volume:");
         ImGui.SameLine();
-        ImGui.PushItemWidth(150); // Fixed width for volume slider
         const volumeRef = { value: volume };
+        ImGui.SetNextItemWidth(150); // Use SetNextItemWidth instead
         if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volumeRef.value * 100)}%`)) {
             setVolume(volumeRef.value);
-        }
-        ImGui.PopItemWidth();
-        
-        ImGui.SameLine();
-        ImGui.Text("loop:");
-        ImGui.SameLine();
-        const loopRef = { value: isLooping };
-        if (ImGui.Checkbox("##loop", loopRef)) {
-            isLooping = loopRef.value;
         }
         
         ImGui.Spacing();
