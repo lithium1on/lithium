@@ -17,6 +17,7 @@ const canvas = document.querySelector("#imgui-canvas");
     let totalDuration = 0;
     let isLoading = false;
     let userSeeking = false;
+    let isLooping = true; // Add loop state
 
     const songs = [
         { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
@@ -40,6 +41,7 @@ const canvas = document.querySelector("#imgui-canvas");
         
         audio = new Audio();
         audio.volume = volume;
+        audio.loop = false; // We'll handle looping manually
         
         audio.addEventListener('loadstart', () => {
             isLoading = true;
@@ -57,7 +59,15 @@ const canvas = document.querySelector("#imgui-canvas");
         });
         
         audio.addEventListener('ended', () => {
-            nextSong();
+            if (isLooping) {
+                // Loop the current song
+                audio.currentTime = 0;
+                audio.play().catch(e => {
+                    console.log('Audio loop play blocked:', e);
+                });
+            } else {
+                nextSong();
+            }
         });
         
         audio.addEventListener('play', () => {
@@ -337,26 +347,29 @@ const canvas = document.querySelector("#imgui-canvas");
         // Control layout: [buttons][bar][time]
         ImGui.BeginGroup();
         
-        // Control buttons on the left
-        if (ImGui.Button("<<")) {
+        // Control buttons on the left with fixed widths
+        ImGui.PushItemWidth(30); // Fixed width for buttons
+        if (ImGui.Button("<<", new ImVec2(30, 0))) {
             prevSong();
         }
         
         ImGui.SameLine();
+        // Use fixed-width button to prevent size changes
         if (isPlaying) {
-            if (ImGui.Button("||")) {
+            if (ImGui.Button("||", new ImVec2(30, 0))) {
                 pauseSong();
             }
         } else {
-            if (ImGui.Button(">")) {
+            if (ImGui.Button(">", new ImVec2(30, 0))) {
                 playSong();
             }
         }
         
         ImGui.SameLine();
-        if (ImGui.Button(">>")) {
+        if (ImGui.Button(">>", new ImVec2(30, 0))) {
             nextSong();
         }
+        ImGui.PopItemWidth();
         
         ImGui.SameLine();
         
@@ -381,15 +394,23 @@ const canvas = document.querySelector("#imgui-canvas");
         
         ImGui.Spacing();
         
-        // Volume control (separate row)
+        // Volume control and loop toggle (same row)
         ImGui.Text("volume:");
         ImGui.SameLine();
-        ImGui.PushItemWidth(150);
+        ImGui.PushItemWidth(150); // Fixed width for volume slider
         const volumeRef = { value: volume };
         if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volumeRef.value * 100)}%`)) {
             setVolume(volumeRef.value);
         }
         ImGui.PopItemWidth();
+        
+        ImGui.SameLine();
+        ImGui.Text("loop:");
+        ImGui.SameLine();
+        const loopRef = { value: isLooping };
+        if (ImGui.Checkbox("##loop", loopRef)) {
+            isLooping = loopRef.value;
+        }
         
         ImGui.Spacing();
         
