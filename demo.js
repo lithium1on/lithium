@@ -379,12 +379,12 @@ const canvas = document.querySelector("#imgui-canvas");
         if (ImGui.Button("<<", new ImVec2(30, 0))) player.previous();
         ImGui.SameLine();
         if (player.isPlaying) {
-            if (ImGui.Button("||", new ImVec2(30, 0))) player.pause();
+            if (ImGui.Button("||", new ImVec2(25, 0))) player.pause();
         } else {
-            if (ImGui.Button(">", new ImVec2(30, 0))) player.play();
+            if (ImGui.Button(">", new ImVec2(25, 0))) player.play();
         }
         ImGui.SameLine();
-        if (ImGui.Button(">>", new ImVec2(30, 0))) player.next();
+        if (ImGui.Button(">>", new ImVec2(25, 0))) player.next();
         ImGui.PopItemWidth();
         ImGui.SameLine();
 
@@ -393,7 +393,7 @@ const canvas = document.querySelector("#imgui-canvas");
             player.progressRef.value = player.duration > 0 ? player.currentTime / player.duration : 0;
         }
         
-        ImGui.SetNextItemWidth(200);
+        ImGui.SetNextItemWidth(150);
         if (ImGui.SliderFloat("##progress", player.progressRef, 0.0, 1.0, "")) {
             if (player.duration > 0) {
                 player.seek(player.progressRef.value * player.duration);
