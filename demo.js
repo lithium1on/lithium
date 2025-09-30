@@ -375,7 +375,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
 
         // Playback controls
-        ImGui.PushItemWidth(30);
+        ImGui.PushItemWidth(25);
         if (ImGui.Button("<<", new ImVec2(30, 0))) player.previous();
         ImGui.SameLine();
         if (player.isPlaying) {
@@ -408,15 +408,6 @@ const canvas = document.querySelector("#imgui-canvas");
 
         ImGui.SameLine();
         ImGui.Text(`${player.formatTime(player.currentTime)} / ${player.formatTime(player.duration)}`);
-
-        // Volume control
-        ImGui.Spacing();
-        ImGui.Text("volume:");
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(150);
-        if (ImGui.SliderFloat("##volume", player.volumeRef, 0.0, 1.0, `${Math.round(player.volumeRef.value * 100)}%`)) {
-            player.setVolume(player.volumeRef.value);
-        }
 
         // Playlist
         ImGui.Spacing();
