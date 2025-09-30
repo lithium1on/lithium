@@ -5,18 +5,8 @@ const canvas = document.querySelector("#imgui-canvas");
 (async () => {
     await ImGuiImplWeb.Init({ canvas, enableDemos: false });
 
-    let audio = null;
-    let isPlaying = false;
-    let currentSongIndex = 0;
-    let volume = 0.3;
-    let currentPlayTime = 0;
-    let totalDuration = 0;
-    let userSeeking = false;
-    let isLoading = false;
-    let currentTime = "loading...";
-    let currentWeather = "loading...";
-
-    const songs = [
+    // ===== MUSIC PLAYER STATE =====
+    const playlist = [
         { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
         { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.jpg" },
         { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg" },
@@ -29,148 +19,313 @@ const canvas = document.querySelector("#imgui-canvas");
         { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" }
     ];
 
-    const progressRef = { value: 0 };
-    const volumeRef = { value: volume };
+    class MusicPlayer {
+        constructor(playlist) {
+            this.playlist = playlist;
+            this.audioElement = null;
+            this.currentIndex = 0;
+            this.isPlaying = false;
+            this.isLoading = false;
+            this.isSeeking = false;
+            this.volume = 0.3;
+            this.currentTime = 0;
+            this.duration = 0;
+            
+            // ImGui refs
+            this.progressRef = { value: 0 };
+            this.volumeRef = { value: this.volume };
+            
+            this.initAudioElement();
+            this.loadTrack(this.currentIndex);
+        }
 
-    function initAudio() {
-        if (audio) audio.pause();
-        audio = new Audio();
-        audio.volume = volume;
-        audio.loop = false;
-        audio.addEventListener('loadstart', () => { isLoading = true; });
-        audio.addEventListener("loadedmetadata", () => { totalDuration = audio.duration || 0; isLoading = false; });
-        audio.addEventListener("timeupdate", () => { if (!userSeeking) currentPlayTime = audio.currentTime || 0; });
-        audio.addEventListener("ended", () => { audio.currentTime = 0; audio.play().catch(()=>{}); });
-        audio.addEventListener("play", () => isPlaying = true);
-        audio.addEventListener("pause", () => isPlaying = false);
-    }
+        initAudioElement() {
+            this.audioElement = new Audio();
+            this.audioElement.volume = this.volume;
+            this.audioElement.loop = false;
 
-    function loadCurrentSong() {
-        if (!audio) initAudio();
-        const s = songs[currentSongIndex];
-        if (s) {
-            audio.src = s.file;
-            currentPlayTime = 0;
-            totalDuration = 0;
-            try { audio.load(); } catch {}
+            this.audioElement.addEventListener('loadstart', () => {
+                this.isLoading = true;
+            });
+
+            this.audioElement.addEventListener('loadedmetadata', () => {
+                this.duration = this.audioElement.duration || 0;
+                this.isLoading = false;
+            });
+
+            this.audioElement.addEventListener('timeupdate', () => {
+                if (!this.isSeeking) {
+                    this.currentTime = this.audioElement.currentTime || 0;
+                }
+            });
+
+            this.audioElement.addEventListener('ended', () => {
+                this.audioElement.currentTime = 0;
+                this.audioElement.play().catch(() => {});
+            });
+
+            this.audioElement.addEventListener('play', () => {
+                this.isPlaying = true;
+            });
+
+            this.audioElement.addEventListener('pause', () => {
+                this.isPlaying = false;
+            });
+        }
+
+        loadTrack(index) {
+            this.currentIndex = index;
+            const track = this.playlist[index];
+            
+            if (track) {
+                this.audioElement.src = track.file;
+                this.currentTime = 0;
+                this.duration = 0;
+                try {
+                    this.audioElement.load();
+                } catch (e) {}
+            }
+        }
+
+        play() {
+            this.audioElement.play().catch(() => {});
+        }
+
+        pause() {
+            this.audioElement.pause();
+        }
+
+        next() {
+            const wasPlaying = this.isPlaying;
+            this.loadTrack((this.currentIndex + 1) % this.playlist.length);
+            if (wasPlaying) this.play();
+        }
+
+        previous() {
+            const wasPlaying = this.isPlaying;
+            this.loadTrack((this.currentIndex - 1 + this.playlist.length) % this.playlist.length);
+            if (wasPlaying) this.play();
+        }
+
+        setVolume(newVolume) {
+            this.volume = Math.max(0, Math.min(1, newVolume));
+            this.volumeRef.value = this.volume;
+            this.audioElement.volume = this.volume;
+        }
+
+        seek(timeInSeconds) {
+            if (this.duration > 0) {
+                const clampedTime = Math.max(0, Math.min(this.duration, timeInSeconds));
+                this.audioElement.currentTime = clampedTime;
+                this.currentTime = clampedTime;
+            }
+        }
+
+        selectTrack(index) {
+            if (index !== this.currentIndex) {
+                const wasPlaying = this.isPlaying;
+                this.loadTrack(index);
+                if (wasPlaying) this.play();
+            }
+        }
+
+        getCurrentTrack() {
+            return this.playlist[this.currentIndex];
+        }
+
+        formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return "00:00";
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
         }
     }
 
-    function playSong() { if (!audio) { initAudio(); loadCurrentSong(); } audio.play().catch(()=>{}); }
-    function pauseSong() { if (audio) audio.pause(); }
-    function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadCurrentSong(); if (isPlaying) playSong(); }
-    function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadCurrentSong(); if (isPlaying) playSong(); }
-    function setVolume(v) { volume = Math.max(0, Math.min(1, v)); volumeRef.value = volume; if (audio) audio.volume = volume; }
-    function seekTo(t) { if (audio && totalDuration > 0) { audio.currentTime = Math.max(0, Math.min(totalDuration, t)); currentPlayTime = audio.currentTime; } }
-    function formatTime(s) { if (isNaN(s) || s < 0) return "00:00"; const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`; }
+    const player = new MusicPlayer(playlist);
 
-    async function loadWeather() {
+    // ===== WEATHER & TIME =====
+    let displayTime = "loading...";
+    let displayWeather = "loading...";
+
+    async function fetchWeather() {
         try {
-            const geo = await (await fetch("https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json")).json();
-            if (!geo.results?.length) throw 0;
-            const { latitude, longitude } = geo.results[0];
-            const w = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`)).json();
-            const t = w.current_weather?.temperature;
-            const c = w.current_weather?.weathercode;
-            const desc = {0:"clear",1:"mostly clear",2:"partly cloudy",3:"overcast",45:"foggy",48:"foggy",51:"light drizzle",53:"drizzle",55:"heavy drizzle",61:"light rain",63:"rain",65:"heavy rain",80:"rain showers",81:"rain showers",82:"heavy showers"}[c] || "unknown";
-            currentWeather = (typeof t === "number") ? `${Math.round(t)}°C, ${desc}` : "weather unavailable";
+            const geoResponse = await fetch("https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json");
+            const geoData = await geoResponse.json();
+            
+            if (!geoData.results?.length) throw new Error("No location found");
+            
+            const { latitude, longitude } = geoData.results[0];
+            const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
+            const weatherData = await weatherResponse.json();
+            
+            const temp = weatherData.current_weather?.temperature;
+            const code = weatherData.current_weather?.weathercode;
+            
+            const weatherDescriptions = {
+                0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "overcast",
+                45: "foggy", 48: "foggy",
+                51: "light drizzle", 53: "drizzle", 55: "heavy drizzle",
+                61: "light rain", 63: "rain", 65: "heavy rain",
+                80: "rain showers", 81: "rain showers", 82: "heavy showers"
+            };
+            
+            const description = weatherDescriptions[code] || "unknown";
+            displayWeather = typeof temp === "number" ? `${Math.round(temp)}°C, ${description}` : "weather unavailable";
         } catch {
-            currentWeather = "weather unavailable";
+            displayWeather = "weather unavailable";
         }
     }
 
-    function loadTime() {
-        try { currentTime = new Date().toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris" }); } catch { currentTime = "time unavailable"; }
+    function updateTime() {
+        try {
+            displayTime = new Date().toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris" });
+        } catch {
+            displayTime = "time unavailable";
+        }
     }
 
-    initAudio();
-    loadCurrentSong();
-    loadTime();
-    loadWeather();
-    setInterval(loadTime, 1000);
-    setInterval(loadWeather, 10 * 60 * 1000);
+    updateTime();
+    fetchWeather();
+    setInterval(updateTime, 1000);
+    setInterval(fetchWeather, 10 * 60 * 1000);
 
-    const loadTexture = src => {
+    // ===== TEXTURE LOADING =====
+    function loadTexture(src) {
         const id = ImGuiImplWeb.LoadTexture();
         const img = new Image();
         img.src = src;
         img.onload = () => ImGuiImplWeb.LoadTexture(img, { id });
         return { id, img };
+    }
+
+    const textures = {
+        atm: loadTexture("assets/img/atm.png"),
+        ratware: loadTexture("assets/img/ratware.png"),
+        musicIcons: {}
     };
 
-    const atm = loadTexture("assets/img/atm.png");
-    const ratware = loadTexture("assets/img/ratware.png");
-    const musicIcons = {};
-    songs.forEach((s,i)=>{ if (s.icon) musicIcons[i] = loadTexture(s.icon); });
+    playlist.forEach((track, index) => {
+        if (track.icon) {
+            textures.musicIcons[index] = loadTexture(track.icon);
+        }
+    });
 
-    const link = (label, url) => { if (ImGui.TextLink(label)) globalThis.open(url, "_blank"); };
-    const copyable = (label, text) => { if (ImGui.TextLink(label)) navigator.clipboard.writeText(text); };
+    // ===== HELPER FUNCTIONS =====
+    const openLink = (label, url) => {
+        if (ImGui.TextLink(label)) {
+            globalThis.open(url, "_blank");
+        }
+    };
 
-    function frame() {
+    const copyToClipboard = (label, text) => {
+        if (ImGui.TextLink(label)) {
+            navigator.clipboard.writeText(text);
+        }
+    };
+
+    // ===== RENDER LOOP =====
+    function renderFrame() {
         ImGuiImplWeb.BeginRender();
 
+        renderAboutWindow();
+        renderProjectsWindow();
+        renderLinksWindow();
+        renderContactWindow();
+        renderDonationsWindow();
+        renderExtrasWindow();
+        renderMusicPlayerWindow();
+
+        ImGuiImplWeb.EndRender();
+        requestAnimationFrame(renderFrame);
+    }
+
+    function renderAboutWindow() {
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy\n");
-        ImGui.Text(`my time: ${currentTime}\nmy lovely weather: ${currentWeather}`);
+        ImGui.Text(`my time: ${displayTime}\nmy lovely weather: ${displayWeather}`);
         ImGui.End();
+    }
 
+    function renderProjectsWindow() {
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
+        
         if (ImGui.TreeNode("lithium's atm")) {
-            ImGui.Text("cool deposit game i made using"); ImGui.SameLine(); link("regui", "https://github.com/depthso/Dear-Regui");
-            ImGui.Text("game link:"); ImGui.SameLine(); link("roblox", "https://www.roblox.com/games/106912201193396/");
-            ImGui.Image(new ImTextureRef(atm.id), new ImVec2(atm.img.width / 1.3, atm.img.height / 1.3));
+            ImGui.Text("cool deposit game i made using");
+            ImGui.SameLine();
+            openLink("regui", "https://github.com/depthso/Dear-Regui");
+            ImGui.Text("game link:");
+            ImGui.SameLine();
+            openLink("roblox", "https://www.roblox.com/games/106912201193396/");
+            ImGui.Image(
+                new ImTextureRef(textures.atm.id),
+                new ImVec2(textures.atm.img.width / 1.3, textures.atm.img.height / 1.3)
+            );
             ImGui.TreePop();
         }
+        
         if (ImGui.TreeNode("ratware")) {
             ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
-            ImGui.Image(new ImTextureRef(ratware.id), new ImVec2(ratware.img.width / 1.7, ratware.img.height / 1.7));
-            ImGui.Text("ratware isnt coming back any time soon (whole server dead 💔)");
+            ImGui.Image(
+                new ImTextureRef(textures.ratware.id),
+                new ImVec2(textures.ratware.img.width / 1.7, textures.ratware.img.height / 1.7)
+            );
+            ImGui.Text("ratware isnt coming back any time soon (whole server dead 💀)");
             ImGui.TreePop();
         }
+        
         ImGui.End();
+    }
 
+    function renderLinksWindow() {
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
-        link("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
-        link("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
-        link("tiktok", "https://www.tiktok.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
-        link("twitch", "https://twitch.tv/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        link("kick", "https://kick.com/lithiumion"); ImGui.SameLine(); ImGui.Text(": @lithiumion");
-        link("spotify", "https://open.spotify.com/users/31jttr5tyy3jk5koz45n22dl3bf4"); ImGui.SameLine(); ImGui.Text(": lithium");
-        link("soundcloud", "https://soundcloud.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        link("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
-        link("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        link("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
+        openLink("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
+        openLink("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
+        openLink("tiktok", "https://www.tiktok.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
+        openLink("twitch", "https://twitch.tv/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
+        openLink("kick", "https://kick.com/lithiumion"); ImGui.SameLine(); ImGui.Text(": @lithiumion");
+        openLink("spotify", "https://open.spotify.com/users/31jttr5tyy3jk5koz45n22dl3bf4"); ImGui.SameLine(); ImGui.Text(": lithium");
+        openLink("soundcloud", "https://soundcloud.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
+        openLink("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
+        openLink("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
+        openLink("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
         ImGui.End();
+    }
 
+    function renderContactWindow() {
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("email:"); ImGui.SameLine(); link("contact@lithium.lat", "mailto:contact@lithium.lat");
-        ImGui.Text("discord:"); ImGui.SameLine(); link("@lithium_1on", "https://discord.com/users/1284236064420003886");
-        ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); link("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
-        ImGui.Text("telegram:"); ImGui.SameLine(); link("@lithium1on", "https://t.me/lithium1on");
+        ImGui.Text("email:"); ImGui.SameLine(); openLink("contact@lithium.lat", "mailto:contact@lithium.lat");
+        ImGui.Text("discord:"); ImGui.SameLine(); openLink("@lithium_1on", "https://discord.com/users/1284236064420003886");
+        ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); openLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
+        ImGui.Text("telegram:"); ImGui.SameLine(); openLink("@lithium1on", "https://t.me/lithium1on");
         ImGui.End();
+    }
 
+    function renderDonationsWindow() {
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("paypal:"); ImGui.SameLine(); link("here", "https://paypal.me/lithiumionbattery");
-        if (ImGui.TreeNode("litecoin")) { copyable("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("bitcoin")) { copyable("bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p", "bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("ethereum")) { copyable("0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C", "0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("monero")) { copyable("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("solana")) { copyable("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("xrp")) { copyable("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
+        ImGui.Text("paypal:"); ImGui.SameLine(); openLink("here", "https://paypal.me/lithiumionbattery");
+        if (ImGui.TreeNode("litecoin")) { copyToClipboard("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
+        if (ImGui.TreeNode("bitcoin")) { copyToClipboard("bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p", "bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p"); ImGui.TreePop(); }
+        if (ImGui.TreeNode("ethereum")) { copyToClipboard("0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C", "0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C"); ImGui.TreePop(); }
+        if (ImGui.TreeNode("monero")) { copyToClipboard("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
+        if (ImGui.TreeNode("solana")) { copyToClipboard("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
+        if (ImGui.TreeNode("xrp")) { copyToClipboard("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
         ImGui.End();
+    }
 
+    function renderExtrasWindow() {
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
+        
         if (ImGui.TreeNode("questions")) {
             ImGui.Text("can i steal this?"); ImGui.SameLine(); ImGui.TextDisabled("nuh uh");
             ImGui.Text("are you a female"); ImGui.SameLine(); ImGui.TextDisabled("think about it");
             ImGui.Text("ur music sucks i wanna submit soem!!"); ImGui.SameLine(); ImGui.TextDisabled("no my music doesnt suck grrr but if you wanna submit contact me lol");
-            ImGui.Text("lithium pls feet pics"); ImGui.SameLine(); link("here", "assets/img/feetpics.gif");
+            ImGui.Text("lithium pls feet pics"); ImGui.SameLine(); openLink("here", "assets/img/feetpics.gif");
             ImGui.TreePop();
         }
 
         if (ImGui.TreeNode("minecraft server")) {
             ImGui.Text("how to join:");
-            copyable("ip: mc.lithium.lat (click to copy)", "mc.lithium.lat");
+            copyToClipboard("ip: mc.lithium.lat (click to copy)", "mc.lithium.lat");
             ImGui.Text("version: 1.21.8");
             ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
             ImGui.Spacing();
@@ -196,69 +351,97 @@ const canvas = document.querySelector("#imgui-canvas");
             quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
         }
+        
         ImGui.End();
+    }
 
+    function renderMusicPlayerWindow() {
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
-        const currentIcon = musicIcons[currentSongIndex];
-        if (currentIcon && currentIcon.img.complete) { ImGui.Image(new ImTextureRef(currentIcon.id), new ImVec2(80,80)); ImGui.SameLine(); }
+        
+        // Album art and track info
+        const currentIcon = textures.musicIcons[player.currentIndex];
+        if (currentIcon && currentIcon.img.complete) {
+            ImGui.Image(new ImTextureRef(currentIcon.id), new ImVec2(80, 80));
+            ImGui.SameLine();
+        }
+        
         ImGui.BeginGroup();
-        const currentSong = songs[currentSongIndex];
         ImGui.Text("now playing:");
-        ImGui.Text(currentSong ? currentSong.name : "no song");
-        if (isLoading) ImGui.Text("loading...");
+        const currentTrack = player.getCurrentTrack();
+        ImGui.Text(currentTrack ? currentTrack.name : "no song");
+        if (player.isLoading) ImGui.Text("loading...");
         ImGui.EndGroup();
+        
         ImGui.Spacing();
 
+        // Playback controls
         ImGui.PushItemWidth(30);
-        if (ImGui.Button("<<", new ImVec2(30,0))) prevSong();
+        if (ImGui.Button("<<", new ImVec2(30, 0))) player.previous();
         ImGui.SameLine();
-        if (isPlaying) { if (ImGui.Button("||", new ImVec2(30,0))) pauseSong(); }
-        else { if (ImGui.Button(">", new ImVec2(30,0))) playSong(); }
+        if (player.isPlaying) {
+            if (ImGui.Button("||", new ImVec2(30, 0))) player.pause();
+        } else {
+            if (ImGui.Button(">", new ImVec2(30, 0))) player.play();
+        }
         ImGui.SameLine();
-        if (ImGui.Button(">>", new ImVec2(30,0))) nextSong();
+        if (ImGui.Button(">>", new ImVec2(30, 0))) player.next();
         ImGui.PopItemWidth();
         ImGui.SameLine();
 
-        if (!userSeeking) progressRef.value = totalDuration > 0 ? currentPlayTime / totalDuration : 0;
-        ImGui.SetNextItemWidth(200);
-        if (ImGui.SliderFloat("##progress", progressRef, 0.0, 1.0, "")) {
-            if (totalDuration > 0) seekTo(progressRef.value * totalDuration);
+        // Progress bar
+        if (!player.isSeeking) {
+            player.progressRef.value = player.duration > 0 ? player.currentTime / player.duration : 0;
         }
-        if (ImGui.IsItemActive()) userSeeking = true;
-        else if (userSeeking) userSeeking = false;
+        
+        ImGui.SetNextItemWidth(200);
+        if (ImGui.SliderFloat("##progress", player.progressRef, 0.0, 1.0, "")) {
+            if (player.duration > 0) {
+                player.seek(player.progressRef.value * player.duration);
+            }
+        }
+        
+        if (ImGui.IsItemActive()) {
+            player.isSeeking = true;
+        } else if (player.isSeeking) {
+            player.isSeeking = false;
+        }
 
         ImGui.SameLine();
-        ImGui.Text(`${formatTime(currentPlayTime)} / ${formatTime(totalDuration)}`);
+        ImGui.Text(`${player.formatTime(player.currentTime)} / ${player.formatTime(player.duration)}`);
 
+        // Volume control
         ImGui.Spacing();
-        ImGui.Text("volume:"); ImGui.SameLine();
+        ImGui.Text("volume:");
+        ImGui.SameLine();
         ImGui.SetNextItemWidth(150);
-        if (ImGui.SliderFloat("##volume", volumeRef, 0.0, 1.0, `${Math.round(volumeRef.value * 100)}%`)) {
-            setVolume(volumeRef.value);
+        if (ImGui.SliderFloat("##volume", player.volumeRef, 0.0, 1.0, `${Math.round(player.volumeRef.value * 100)}%`)) {
+            player.setVolume(player.volumeRef.value);
         }
 
+        // Playlist
         ImGui.Spacing();
         if (ImGui.TreeNode("playlist")) {
-            songs.forEach((s,i)=> {
-                const cur = i===currentSongIndex;
-                const label = cur ? `> ${s.name}` : s.name;
-                if (cur) ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
-                if (ImGui.Selectable(label, cur)) {
-                    if (i !== currentSongIndex) {
-                        currentSongIndex = i;
-                        loadCurrentSong();
-                        if (isPlaying) playSong();
-                    }
+            playlist.forEach((track, index) => {
+                const isCurrentTrack = index === player.currentIndex;
+                const label = isCurrentTrack ? `> ${track.name}` : track.name;
+                
+                if (isCurrentTrack) {
+                    ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
                 }
-                if (cur) ImGui.PopStyleColor();
+                
+                if (ImGui.Selectable(label, isCurrentTrack)) {
+                    player.selectTrack(index);
+                }
+                
+                if (isCurrentTrack) {
+                    ImGui.PopStyleColor();
+                }
             });
             ImGui.TreePop();
         }
 
         ImGui.End();
-        ImGuiImplWeb.EndRender();
-        requestAnimationFrame(frame);
     }
 
-    requestAnimationFrame(frame);
+    requestAnimationFrame(renderFrame);
 })();
