@@ -51,14 +51,9 @@ const canvas = document.querySelector("#imgui-canvas");
                 this.isLoading = false;
             });
 
-            this.audioElement.addEventListener('timeupdate', () => {
-                if (!this.isSeeking) {
-                    this.currentTime = this.audioElement.currentTime || 0;
-                }
-            });
-
             this.audioElement.addEventListener('ended', () => {
                 this.audioElement.currentTime = 0;
+                this.currentTime = 0;
                 this.audioElement.play().catch(() => {});
             });
 
@@ -352,6 +347,10 @@ const canvas = document.querySelector("#imgui-canvas");
     function renderMusicPlayerWindow() {
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         
+        if (!player.isSeeking) {
+            player.currentTime = player.audioElement.currentTime || 0;
+        }
+
         const currentIcon = textures.musicIcons[player.currentIndex];
         if (currentIcon && currentIcon.img.complete) {
             ImGui.Image(new ImTextureRef(currentIcon.id), new ImVec2(80, 80));
