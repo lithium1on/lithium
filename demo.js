@@ -5,7 +5,6 @@ const canvas = document.querySelector("#imgui-canvas");
 (async () => {
     await ImGuiImplWeb.Init({ canvas, enableDemos: false });
 
-    // ===== MUSIC PLAYER STATE =====
     const playlist = [
         { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
         { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.jpg" },
@@ -31,7 +30,6 @@ const canvas = document.querySelector("#imgui-canvas");
             this.currentTime = 0;
             this.duration = 0;
             
-            // ImGui refs
             this.progressRef = { value: 0 };
             this.volumeRef = { value: this.volume };
             
@@ -143,7 +141,6 @@ const canvas = document.querySelector("#imgui-canvas");
 
     const player = new MusicPlayer(playlist);
 
-    // ===== WEATHER & TIME =====
     let displayTime = "loading...";
     let displayWeather = "loading...";
 
@@ -189,7 +186,6 @@ const canvas = document.querySelector("#imgui-canvas");
     setInterval(updateTime, 1000);
     setInterval(fetchWeather, 10 * 60 * 1000);
 
-    // ===== TEXTURE LOADING =====
     function loadTexture(src) {
         const id = ImGuiImplWeb.LoadTexture();
         const img = new Image();
@@ -210,7 +206,6 @@ const canvas = document.querySelector("#imgui-canvas");
         }
     });
 
-    // ===== HELPER FUNCTIONS =====
     const openLink = (label, url) => {
         if (ImGui.TextLink(label)) {
             globalThis.open(url, "_blank");
@@ -223,7 +218,6 @@ const canvas = document.querySelector("#imgui-canvas");
         }
     };
 
-    // ===== RENDER LOOP =====
     function renderFrame() {
         ImGuiImplWeb.BeginRender();
 
@@ -358,7 +352,6 @@ const canvas = document.querySelector("#imgui-canvas");
     function renderMusicPlayerWindow() {
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         
-        // Album art and track info
         const currentIcon = textures.musicIcons[player.currentIndex];
         if (currentIcon && currentIcon.img.complete) {
             ImGui.Image(new ImTextureRef(currentIcon.id), new ImVec2(80, 80));
@@ -374,42 +367,39 @@ const canvas = document.querySelector("#imgui-canvas");
         
         ImGui.Spacing();
 
-        // Playback controls
-        ImGui.PushItemWidth(25);
+        ImGui.PushItemWidth(30);
         if (ImGui.Button("<<", new ImVec2(30, 0))) player.previous();
         ImGui.SameLine();
         if (player.isPlaying) {
-            if (ImGui.Button("||", new ImVec2(25, 0))) player.pause();
+            if (ImGui.Button("||", new ImVec2(30, 0))) player.pause();
         } else {
-            if (ImGui.Button(">", new ImVec2(25, 0))) player.play();
+            if (ImGui.Button(">", new ImVec2(30, 0))) player.play();
         }
         ImGui.SameLine();
-        if (ImGui.Button(">>", new ImVec2(25, 0))) player.next();
+        if (ImGui.Button(">>", new ImVec2(30, 0))) player.next();
         ImGui.PopItemWidth();
         ImGui.SameLine();
 
-        // Progress bar
         if (!player.isSeeking) {
             player.progressRef.value = player.duration > 0 ? player.currentTime / player.duration : 0;
         }
         
-        ImGui.SetNextItemWidth(150);
-        if (ImGui.SliderFloat("##progress", player.progressRef, 0.0, 1.0, "")) {
-            if (player.duration > 0) {
-                player.seek(player.progressRef.value * player.duration);
-            }
-        }
+        ImGui.SetNextItemWidth(200);
+        const progressChanged = ImGui.SliderFloat("##progress", player.progressRef, 0.0, 1.0, "");
         
         if (ImGui.IsItemActive()) {
             player.isSeeking = true;
         } else if (player.isSeeking) {
             player.isSeeking = false;
         }
+        
+        if (progressChanged && player.duration > 0) {
+            player.seek(player.progressRef.value * player.duration);
+        }
 
         ImGui.SameLine();
         ImGui.Text(`${player.formatTime(player.currentTime)} / ${player.formatTime(player.duration)}`);
 
-        // Playlist
         ImGui.Spacing();
         if (ImGui.TreeNode("playlist")) {
             playlist.forEach((track, index) => {
