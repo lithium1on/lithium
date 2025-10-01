@@ -43,7 +43,6 @@ const Canvas = document.querySelector("#imgui-canvas");
 
         InitAudioElement() {
             this.AudioElement = new Audio();
-            this.AudioElement.loop = false;
 
             this.AudioElement.addEventListener('loadstart', () => {
                 this.IsLoading = true;
@@ -55,9 +54,7 @@ const Canvas = document.querySelector("#imgui-canvas");
             });
 
             this.AudioElement.addEventListener('ended', () => {
-                this.AudioElement.currentTime = 0;
-                this.CurrentTime = 0;
-                this.AudioElement.play().catch(() => {});
+                this.Next();
             });
 
             this.AudioElement.addEventListener('play', () => {
