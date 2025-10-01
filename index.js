@@ -132,7 +132,7 @@ const Canvas = document.querySelector("#imgui-canvas");
 
     const Player = new MusicPlayer(Playlist);
 
-    this.MusicPlayer.volume = 0.3;
+    Player.volume = 0.3;
 
     let DisplayTime = "loading...";
     let DisplayWeather = "loading...";
