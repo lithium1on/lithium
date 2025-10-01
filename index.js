@@ -207,13 +207,13 @@ const Canvas = document.querySelector("#imgui-canvas");
 
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy");
-        ImGui.NewLine();
+        ImGui.Spacing();
         ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
         ImGui.End();
 
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff ive made;");
-        ImGui.NewLine();
+        ImGui.Spacing();
         if (ImGui.TreeNode("lithium's atm")) {
             ImGui.Text("cool deposit game i made using");
             ImGui.SameLine();
@@ -236,7 +236,7 @@ const Canvas = document.querySelector("#imgui-canvas");
             ImGui.Text("ratware isnt coming back any time soon (whole server dead 💀)");
             ImGui.TreePop();
         }
-        ImGui.NewLine();
+        ImGui.Spacing();
         ImGui.Text("check back later for more thx");
         ImGui.End();
 
