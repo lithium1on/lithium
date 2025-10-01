@@ -373,7 +373,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.SameLine();
         if (ImGui.Button(">>", new ImVec2(25, 0))) player.next();
         ImGui.PopItemWidth();
-        ImGui.SameLine(0, -1);
+        ImGui.SameLine(0, 100);
         ImGui.Text(`${player.formatTime(player.currentTime)} / ${player.formatTime(player.duration)}`);
 
         ImGui.Spacing();
