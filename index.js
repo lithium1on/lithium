@@ -16,15 +16,26 @@ const Canvas = document.querySelector("#imgui-canvas");
     await ImGuiImplWeb.Init({ canvas: Canvas, enableDemos: false });
 
     const Playlist = [
-        { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.jpg" },
+        { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg" },
+        { name: "antichrist", file: "assets/audio/antichrist.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg" },
+        { name: "anxiety", file: "assets/audio/anxiety.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg" },
+        { name: "fed", file: "assets/audio/fed.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg" },
+        { name: "im f1ne", file: "assets/audio/fine.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg" },
+        { name: "motorola", file: "assets/audio/motorola.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.jpg" },
+        { name: "the light", file: "assets/audio/light.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg" },
-        { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" }
+        { name: "stay_w_me", file: "assets/audio/swm.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" },
+        { name: "stay_with_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg" },
+        { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "voices", file: "assets/audio/voices.opus", icon: "assets/img/music/m1v.jpg" },
     ];
 
     class MusicPlayer {
