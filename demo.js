@@ -2,6 +2,16 @@ import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2
 
 const canvas = document.querySelector("#imgui-canvas");
 
+(function() {
+    const hour = new Date().getHours();
+    const bgImage = (hour >= 18 || hour < 8) 
+        ? 'assets/img/redmoon.png' 
+        : 'assets/img/bliss.png';
+    
+    document.body.style.background = `url('${bgImage}') no-repeat center center`;
+    document.body.style.backgroundSize = 'cover';
+})();
+
 (async () => {
     await ImGuiImplWeb.Init({ canvas, enableDemos: false });
 
