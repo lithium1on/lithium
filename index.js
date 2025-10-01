@@ -16,7 +16,6 @@ const Canvas = document.querySelector("#imgui-canvas");
     await ImGuiImplWeb.Init({ canvas: Canvas, enableDemos: false });
 
     const Playlist = [
-        { name: "a new kind of love", file: "assets/audio/ankol.opus", icon: "assets/img/music/ankol.jpg" },
         { name: "devil.child", file: "assets/audio/devil.opus", icon: "assets/img/music/devil.jpg" },
         { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg" },
         { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg" },
