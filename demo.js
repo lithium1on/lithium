@@ -25,12 +25,10 @@ const canvas = document.querySelector("#imgui-canvas");
             this.currentIndex = 0;
             this.isPlaying = false;
             this.isLoading = false;
-            this.isSeeking = false;
             this.volume = 0.3;
             this.currentTime = 0;
             this.duration = 0;
             
-            this.progressRef = { value: 0 };
             this.volumeRef = { value: this.volume };
             
             this.initAudioElement();
@@ -347,9 +345,7 @@ const canvas = document.querySelector("#imgui-canvas");
     function renderMusicPlayerWindow() {
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         
-        if (!player.isSeeking) {
-            player.currentTime = player.audioElement.currentTime || 0;
-        }
+        player.currentTime = player.audioElement.currentTime || 0;
 
         const currentIcon = textures.musicIcons[player.currentIndex];
         if (currentIcon && currentIcon.img.complete) {
@@ -377,26 +373,7 @@ const canvas = document.querySelector("#imgui-canvas");
         ImGui.SameLine();
         if (ImGui.Button(">>", new ImVec2(25, 0))) player.next();
         ImGui.PopItemWidth();
-        ImGui.SameLine();
-
-        if (!player.isSeeking) {
-            player.progressRef.value = player.duration > 0 ? player.currentTime / player.duration : 0;
-        }
-        
-        ImGui.SetNextItemWidth(150);
-        const progressChanged = ImGui.SliderFloat("##progress", player.progressRef, 0.0, 1.0, "");
-        
-        if (ImGui.IsItemActive()) {
-            player.isSeeking = true;
-        } else if (player.isSeeking) {
-            player.isSeeking = false;
-        }
-        
-        if (progressChanged && player.duration > 0) {
-            player.seek(player.progressRef.value * player.duration);
-        }
-
-        ImGui.SameLine();
+        ImGui.SameLine(0, -1);
         ImGui.Text(`${player.formatTime(player.currentTime)} / ${player.formatTime(player.duration)}`);
 
         ImGui.Spacing();
