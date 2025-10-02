@@ -35,6 +35,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "stay_with_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg" },
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg" },
         { name: "voices", file: "assets/audio/voices.opus", icon: "assets/img/music/m1v.jpg" },
     ];
 
