@@ -1,3 +1,8 @@
+if (location.hostname === "lithium.lat") {
+  const ReplaceTo = "https://lithium.wtf" + location.pathname + location.search + location.hash;
+  location.replace(ReplaceTo);
+}
+
 import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui";
 
 const Canvas = document.querySelector("#imgui-canvas");
@@ -264,7 +269,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.End();
 
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("email:"); ImGui.SameLine(); OpenLink("contact@lithium.lat", "mailto:contact@lithium.lat");
+        ImGui.Text("email:"); ImGui.SameLine(); OpenLink("contact@lithium.wtf", "mailto:contact@lithium.wtf");
         ImGui.Text("discord:"); ImGui.SameLine(); OpenLink("@lithium_1on", "https://discord.com/users/1284236064420003886");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); OpenLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); OpenLink("@lithium1on", "https://t.me/lithium1on");
@@ -290,7 +295,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         }
         if (ImGui.TreeNode("minecraft server")) {
             ImGui.Text("how to join:");
-            CopyToClipboard("ip: mc.lithium.lat (click to copy)", "mc.lithium.lat");
+            CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf");
             ImGui.Text("version: 1.21.8");
             ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
             ImGui.Spacing();
