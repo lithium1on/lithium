@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<noscript><meta http-equiv="refresh" content="0; url=/noscript"></noscript>
+<noscript><meta http-equiv="refresh" content="0; url=https://lithium.wtf/noscript"></noscript>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -179,6 +179,11 @@
   </main>
 
   <script>
+    if (location.hostname === "lithium.lat") {
+      const ReplaceTo = "https://lithium.wtf" + location.pathname + location.search + location.hash;
+      location.replace(ReplaceTo);
+    }
+
     // music player
     const songs = [
       'assets/audio/ankol.opus',
