@@ -105,9 +105,8 @@ const Canvas = document.querySelector("#imgui-canvas");
         }
 
         Next() {
-            const WasPlaying = this.IsPlaying;
             this.LoadTrack((this.CurrentIndex + 1) % this.Playlist.length);
-            if (WasPlaying) this.Play();
+            this.Play();
         }
 
         Previous() {
