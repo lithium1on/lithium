@@ -37,7 +37,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg" },
         { name: "stay_w_me", file: "assets/audio/swm.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" },
-        { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "stay_with_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg" },
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg" },
@@ -232,8 +232,9 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy");
         ImGui.Spacing();
         ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
+        const AboutWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += AboutWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -264,8 +265,9 @@ const Canvas = document.querySelector("#imgui-canvas");
         }
         ImGui.Spacing();
         ImGui.Text("check back later for more thx");
+        const ProjectsWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += ProjectsWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -280,8 +282,9 @@ const Canvas = document.querySelector("#imgui-canvas");
         OpenLink("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
         OpenLink("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
         OpenLink("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
+        const LinksWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += LinksWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -290,8 +293,9 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.Text("discord:"); ImGui.SameLine(); OpenLink("@lithium_1on", "https://discord.com/users/1284236064420003886");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); OpenLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); OpenLink("@lithium1on", "https://t.me/lithium1on");
+        const ContactWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += ContactWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -303,8 +307,9 @@ const Canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("monero")) { CopyToClipboard("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
         if (ImGui.TreeNode("solana")) { CopyToClipboard("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
         if (ImGui.TreeNode("xrp")) { CopyToClipboard("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
+        const DonationsWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += DonationsWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -343,8 +348,9 @@ const Canvas = document.querySelector("#imgui-canvas");
             Quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
         }
+        const ExtrasWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
-        CurrentYPos + WindowPadding;
+        CurrentYPos += ExtrasWindowHeight + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
