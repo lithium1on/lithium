@@ -233,7 +233,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
         ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -265,7 +265,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
         ImGui.Text("check back later for more thx");
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -281,7 +281,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         OpenLink("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
         OpenLink("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -291,7 +291,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); OpenLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); OpenLink("@lithium1on", "https://t.me/lithium1on");
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -304,7 +304,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("solana")) { CopyToClipboard("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
         if (ImGui.TreeNode("xrp")) { CopyToClipboard("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
@@ -344,7 +344,7 @@ const Canvas = document.querySelector("#imgui-canvas");
             ImGui.TreePop();
         }
         ImGui.End();
-        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
+        CurrentYPos + WindowPadding;
 
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
