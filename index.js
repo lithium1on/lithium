@@ -37,7 +37,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg" },
         { name: "stay_w_me", file: "assets/audio/swm.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg" },
-        { name: "stay_with_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg" },
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg" },
@@ -217,15 +217,26 @@ const Canvas = document.querySelector("#imgui-canvas");
         }
     };
 
+    const WindowPadding = 3;
+    let CurrentYPos = 10;
+    const StartXPos = 10;
+
     function RenderFrame() {
         ImGuiImplWeb.BeginRender();
 
+        CurrentYPos = 10;
+
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy");
         ImGui.Spacing();
         ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("here are some pretty cool stuff ive made;");
         ImGui.Spacing();
@@ -254,7 +265,10 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.Spacing();
         ImGui.Text("check back later for more thx");
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
         OpenLink("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
         OpenLink("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
@@ -267,14 +281,20 @@ const Canvas = document.querySelector("#imgui-canvas");
         OpenLink("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
         OpenLink("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("email:"); ImGui.SameLine(); OpenLink("contact@lithium.wtf", "mailto:contact@lithium.wtf");
         ImGui.Text("discord:"); ImGui.SameLine(); OpenLink("@lithium_1on", "https://discord.com/users/1284236064420003886");
         ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); OpenLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
         ImGui.Text("telegram:"); ImGui.SameLine(); OpenLink("@lithium1on", "https://t.me/lithium1on");
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
         ImGui.Text("paypal:"); ImGui.SameLine(); OpenLink("here", "https://paypal.me/lithiumionbattery");
         if (ImGui.TreeNode("litecoin")) { CopyToClipboard("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
@@ -284,7 +304,10 @@ const Canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("solana")) { CopyToClipboard("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
         if (ImGui.TreeNode("xrp")) { CopyToClipboard("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
         if (ImGui.TreeNode("questions")) {
             ImGui.Text("can i steal this?"); ImGui.SameLine(); ImGui.TextDisabled("nuh uh");
@@ -321,7 +344,10 @@ const Canvas = document.querySelector("#imgui-canvas");
             ImGui.TreePop();
         }
         ImGui.End();
+        CurrentYPos += ImGui.GetWindowHeight() + WindowPadding;
 
+        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
+        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
         Player.CurrentTime = Player.AudioElement.currentTime || 0;
         const CurrentIcon = Textures.MusicIcons[Player.CurrentIndex];
