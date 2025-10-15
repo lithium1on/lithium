@@ -325,7 +325,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("minecraft server")) {
             ImGui.Text("how to join:");
             CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf");
-            ImGui.Text("version: 1.21.8");
+            ImGui.Text("version: 1.21.10");
             ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
             ImGui.Spacing();
             ImGui.Text("rules:");
