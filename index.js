@@ -139,8 +139,7 @@ const Canvas = document.querySelector("#imgui-canvas");
     }
 
     const Player = new MusicPlayer(Playlist);
-
-    Player.volume = 0.3;
+    Player.AudioElement.volume = 0.3;
 
     let DisplayTime = "loading...";
     let DisplayWeather = "loading...";
