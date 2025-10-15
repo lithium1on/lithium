@@ -349,6 +349,15 @@ const Canvas = document.querySelector("#imgui-canvas");
             Quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
         }
+        if (ImGui.TreeNode("info")) {
+            ImGui.Text("imgui version:");
+            ImGui.SameLine();
+            ImGui.TextDisabled(ImGui.GetVersion());
+            ImGui.Text("this site is made using");
+            ImGui.SameLine();
+            OpenLink("jsimgui", "https://github.com/mori2003/jsimgui");
+            ImGui.TreePop();
+        }
         const ExtrasWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
         CurrentYPos += ExtrasWindowHeight + WindowPadding;
