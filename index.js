@@ -42,6 +42,8 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg" },
         { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg" },
         { name: "voices", file: "assets/audio/voices.opus", icon: "assets/img/music/m1v.jpg" },
+        { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg" },
+        { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg" }
     ];
 
     class MusicPlayer {
