@@ -344,7 +344,8 @@ const Canvas = document.querySelector("#imgui-canvas");
                 `"all your base are belong to us" - Edwin Murray`,
                 `"if youre not tuff then youre not tuff" - Plague`,
                 `"a man who unironically chooses to build a cashgrab game as a replacement for developing exploits is homosexual" - Lily Phillips`,
-                `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`
+                `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`,
+                `"give me 6 hours to chop down a tree and i will spend the first four gooning" - Abraham lincoln`
             ];
             Quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
