@@ -28,7 +28,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "anxiety", file: "assets/audio/anxiety.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & kets4eki, Pröz" },
         { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg", author: "d3r & wasty" },
         { name: "fed", file: "assets/audio/fed.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
-        { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg", author: "cy4ne & iwannabemissed" },
+        { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg", author: "cy4ne & \niwannabemissed" },
         { name: "im f1ne", file: "assets/audio/fine.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
         { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg", author: "disoc8" },
         { name: "motorola", file: "assets/audio/motorola.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & luvwillow" },
@@ -41,7 +41,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg", author: "d3r" },
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
         { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg", author: "luvwillow" },
-        { name: "voices", file: "assets/audio/voices.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & kets4eki, 6arelyhuman" },
+        { name: "voices", file: "assets/audio/voices.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & kets4eki, \n6arelyhuman" },
         { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg", author: "d3r archive (wasty)" },
         { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" }
     ];
