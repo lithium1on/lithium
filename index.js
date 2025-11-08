@@ -274,6 +274,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
         OpenLink("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
+        OpenLink("steam", "https://steamcommunity.com/id/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
         OpenLink("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
         OpenLink("tiktok", "https://www.tiktok.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
         OpenLink("twitch", "https://twitch.tv/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
