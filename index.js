@@ -347,7 +347,8 @@ const Canvas = document.querySelector("#imgui-canvas");
                 `"a man who unironically chooses to build a cashgrab game as a replacement for developing exploits is homosexual" - Lily Phillips`,
                 `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`,
                 `"give me 6 hours to chop down a tree and i will spend the first four gooning" - Abraham lincoln`,
-                `"I will inject my scripts inside you" - ex7m`
+                `"I will inject my scripts inside you" - ex7m`,
+                `"if you're 555 then i'm 666" - winxx`
             ];
             Quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
