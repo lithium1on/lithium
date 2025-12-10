@@ -3,7 +3,7 @@ if (location.hostname === "lithium.lat") {
   location.replace(ReplaceTo);
 }
 
-import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.9.0";
+import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui";
 
 const Canvas = document.querySelector("#imgui-canvas");
 
@@ -223,6 +223,9 @@ const Canvas = document.querySelector("#imgui-canvas");
     const StartXPos = 10;
 
     function RenderFrame() {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
         ImGuiImplWeb.BeginRender();
 
         CurrentYPos = 10;
