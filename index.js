@@ -223,8 +223,8 @@ const Canvas = document.querySelector("#imgui-canvas");
     const StartXPos = 10;
 
     function RenderFrame() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+        Canvas.width = Canvas.clientWidth;
+        Canvas.height = Canvas.clientHeight;
 
         ImGuiImplWeb.BeginRender();
 
