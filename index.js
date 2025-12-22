@@ -3,7 +3,7 @@ if (location.hostname === "lithium.lat") {
   location.replace(ReplaceTo);
 }
 
-import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui";
+import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.9.0";
 
 const Canvas = document.querySelector("#imgui-canvas");
 
@@ -223,9 +223,6 @@ const Canvas = document.querySelector("#imgui-canvas");
     const StartXPos = 10;
 
     function RenderFrame() {
-        Canvas.width = Canvas.clientWidth;
-        Canvas.height = Canvas.clientHeight;
-
         ImGuiImplWeb.BeginRender();
 
         CurrentYPos = 10;
@@ -363,6 +360,9 @@ const Canvas = document.querySelector("#imgui-canvas");
             ImGui.Text("this site is made using");
             ImGui.SameLine();
             OpenLink("jsimgui", "https://github.com/mori2003/jsimgui");
+            ImGui.Text("the website's source is on");
+            ImGui.SameLine();
+            OpenLink("github", "https://github.com/lithium1on/lithium");
             ImGui.TreePop();
         }
         const ExtrasWindowHeight = ImGui.GetWindowHeight();
