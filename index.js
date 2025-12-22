@@ -33,11 +33,13 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg", author: "skypebf & 6arelyhuman" },
         { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg", author: "d3r" },
+        { name: "seksualna niebezpieczna", file: "assets/audio/seksualna.opus", icon: "assets/img/music/seksualna.jpg", author: "hubithekid, kets4eki,\nlunarr" },
         { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
         { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg", author: "luvwillow" },
         { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg", author: "d3r archive (wasty)" },
-        { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" }
-        // fedex employee of the month there
+        { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" },
+        { name: "molly in my backpack", file: "assets/audio/molly.opus", icon: "assets/img/music/molly.jpg", author: "kets4eki, Crescent,\nwujek" },
+        { name: "old memories!", file: "assets/audio/oldmemories.opus", icon: "assets/img/music/m1v2.jpg", author: "m0v, m1v" }
     ];
 
 
