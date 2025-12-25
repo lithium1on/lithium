@@ -348,10 +348,10 @@ const Canvas = document.querySelector("#imgui-canvas");
         if (ImGui.TreeNode("minecraft server")) { 
             ImGui.Text("how to join:"); 
             CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf"); 
-            ImGui.Text("version: $json.software.version");
+            ImGui.Text(`version: ${Minecraft.Json.server.software.version}`);
             ImGui.Text("server is currently");
             ImGui.SameLine();
-            if (json.server.status === 0) {
+            if (Minecraft.Json.server.status === 0) {
                 ImGui.Text("offline");
             } else if (Minecraft.Json.server.status === 1) {
                 ImGui.Text("online");
@@ -376,7 +376,8 @@ const Canvas = document.querySelector("#imgui-canvas");
             }
             ImGui.Text(`${Minecraft.Json.server.players.count} players out of ${Minecraft.Json.server.players.max} r online`);
             ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!"); 
-            ImGui.Spacing(); ImGui.Text("rules:"); 
+            ImGui.Spacing(); 
+            ImGui.Text("rules:"); 
             ImGui.BulletText("cracks arent allowed, you pooron"); 
             ImGui.BulletText("no griefing"); 
             ImGui.BulletText("no hack clients!!"); 
