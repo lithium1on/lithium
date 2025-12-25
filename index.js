@@ -137,6 +137,32 @@ const Canvas = document.querySelector("#imgui-canvas");
     const Player = new MusicPlayer(Playlist);
     Player.AudioElement.volume = 0.3;
 
+    class MinecraftServer {
+		constructor(Url) {
+				this.Url = Url;
+				this.Json = null;
+				this.Error = null;
+				this.Fetched = false;
+		}
+
+		async Fetch() {
+			if (this.Fetched) return;
+			this.Fetched = true;
+
+			try {
+				const Res = await fetch(this.Url, { cache: "no-store" });
+				if (!Res.ok) throw new Error(`HTTP ${Res.status}`);
+				this.Json = await Res.json();
+				this.Error = null;
+			} catch (e) {
+				this.Error = String(e?.message ?? e);
+			}
+		}
+    }
+
+    const Minecraft = new MinecraftServer("https://api.lithium.wtf/mc/about");
+    await Minecraft.Fetch();
+
     let DisplayTime = "loading...";
     let DisplayWeather = "loading...";
 
@@ -319,18 +345,43 @@ const Canvas = document.querySelector("#imgui-canvas");
             ImGui.Text("lithium pls feet pics"); ImGui.SameLine(); OpenLink("here", "assets/img/feetpics.gif");
             ImGui.TreePop();
         }
-        if (ImGui.TreeNode("minecraft server")) {
-            ImGui.Text("how to join:");
-            CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf");
-            ImGui.Text("version: 1.21.10");
-            ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
-            ImGui.Spacing();
-            ImGui.Text("rules:");
-            ImGui.BulletText("cracks arent allowed, you pooron");
-            ImGui.BulletText("no griefing");
-            ImGui.BulletText("no hack clients!!");
-            ImGui.BulletText("breaking rules = whitelist revoked");
-            ImGui.TreePop();
+        if (ImGui.TreeNode("minecraft server")) { 
+            ImGui.Text("how to join:"); 
+            CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf"); 
+            ImGui.Text("version: $json.software.version");
+            ImGui.Text("server is currently");
+            ImGui.SameLine();
+            if (json.server.status === 0) {
+                ImGui.Text("offline");
+            } else if (Minecraft.Json.server.status === 1) {
+                ImGui.Text("online");
+            } else if (Minecraft.Json.server.status === 2) {
+                ImGui.Text("starting");
+            } else if (Minecraft.Json.server.status === 3) {
+                ImGui.Text("stopping");
+            } else if (Minecraft.Json.server.status === 4) {
+                ImGui.Text("restarting");
+            } else if (Minecraft.Json.server.status === 5) {
+                ImGui.Text("saving");
+            } else if (Minecraft.Json.server.status === 6) {
+                ImGui.Text("loading");
+            } else if (Minecraft.Json.server.status === 7) {
+                ImGui.Text("crashed");
+            } else if (Minecraft.Json.server.status === 8) {
+                ImGui.Text("pending");
+            } else if (Minecraft.Json.server.status === 9) {
+                ImGui.Text("transferring");
+            } else if (Minecraft.Json.server.status === 10) {
+                ImGui.Text("preparing");
+            }
+            ImGui.Text(`${Minecraft.Json.server.players.count} players out of ${Minecraft.Json.server.players.max} r online`);
+            ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!"); 
+            ImGui.Spacing(); ImGui.Text("rules:"); 
+            ImGui.BulletText("cracks arent allowed, you pooron"); 
+            ImGui.BulletText("no griefing"); 
+            ImGui.BulletText("no hack clients!!"); 
+            ImGui.BulletText("breaking rules = whitelist revoked"); 
+            ImGui.TreePop(); 
         }
         if (ImGui.TreeNode("quotes")) {
             ImGui.Text("dm me on discord to add a quote");
