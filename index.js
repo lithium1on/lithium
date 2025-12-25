@@ -374,7 +374,7 @@ const Canvas = document.querySelector("#imgui-canvas");
             } else if (Minecraft.Json.server.status === 10) {
                 ImGui.Text("preparing");
             }
-            ImGui.Text(`${Minecraft.Json.server.players.count} players out of ${Minecraft.Json.server.players.max} r online`);
+            ImGui.Text(`${Minecraft.Json.server.players.count} / ${Minecraft.Json.server.players.max} players are online`);
             ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!"); 
             ImGui.Spacing(); 
             ImGui.Text("rules:"); 
