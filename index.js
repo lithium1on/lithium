@@ -30,6 +30,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg", author: "disoc8" },
         { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.jpg", author: "overtonight" },
         { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg", author: "luvwillow" },
+        { name: "kylie", file: "assets/audio/kylie.opus", icon: "assets/img/music/kylie.jpg", author: "kets4eki, KidSnorlax,\nPröz, lunarr" },
         { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg", author: "skypebf & 6arelyhuman" },
         { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
         { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg", author: "d3r" },
@@ -39,7 +40,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg", author: "d3r archive (wasty)" },
         { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" },
         { name: "molly in my backpack", file: "assets/audio/molly.opus", icon: "assets/img/music/molly.jpg", author: "kets4eki, Crescent,\nwujek" },
-        { name: "old memories!", file: "assets/audio/oldmemories.opus", icon: "assets/img/music/m1v2.jpg", author: "m0v, m1v" }
+        { name: "old memories!", file: "assets/audio/oldmemories.opus", icon: "assets/img/music/m1v2.jpg", author: "m0v / m1v" }
     ];
 
 
