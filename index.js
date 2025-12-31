@@ -282,11 +282,12 @@ const Canvas = document.querySelector("#imgui-canvas");
         }
         if (ImGui.TreeNode("ratware")) {
             ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
+            ImGui.Text("was mostly just atlantis but with a custom ui lol and very pro custom api");
             ImGui.Image(
                 new ImTextureRef(Textures.Ratware.id),
                 new ImVec2(Textures.Ratware.img.width / 1.7, Textures.Ratware.img.height / 1.7)
             );
-            ImGui.Text("ratware isnt coming back any time soon (whole server dead 💀)");
+            ImGui.Text("ratware isnt coming back any time soon (whole server dead)");
             ImGui.TreePop();
         }
         if (ImGui.TreeNode("cornball ide")) {
