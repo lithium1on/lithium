@@ -294,7 +294,7 @@ const Canvas = document.querySelector("#imgui-canvas");
                 new ImTextureRef(Textures.Cornball.id),
                 new ImVec2(Textures.Cornball.img.width / 1.2, Textures.Cornball.img.height / 1.2)
             );
-            ImGui.Text("while it cant run shit properly, it has 1% unc and level 2");
+            ImGui.Text("while it cant run shit properly, it has 1% unc and its level 2");
             ImGui.Text("the only problem with it is the environment being dogshit");
             ImGui.Text("it uses");
             ImGui.SameLine();
