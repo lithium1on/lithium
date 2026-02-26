@@ -223,6 +223,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         Atm: LoadTexture("assets/img/atm.png"),
         Ratware: LoadTexture("assets/img/ratware.png"),
         Cornball: LoadTexture("assets/img/cornball.png"),
+        Pfp: LoadTexture("assets/img/pfp.png"),
         MusicIcons: {}
     };
 
@@ -256,9 +257,18 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nrelationship helper\nfrench guy");
+        ImGui.BeginGroup();
+        ImGui.Image(
+            new ImTextureRef(Textures.Pfp.id),
+            new ImVec2(Textures.Pfp.img.width / 3, Textures.Pfp.img.height / 3)
+        );
+        ImGui.EndGroup();
+        ImGui.SameLine(0, 8);
+        ImGui.BeginGroup();
+        ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nim 17 years old (november 8th)\nfrenchie guy");
         ImGui.Spacing();
         ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
+        ImGui.EndGroup();
         const AboutWindowHeight = ImGui.GetWindowHeight();
         ImGui.End();
         CurrentYPos += AboutWindowHeight + WindowPadding;
@@ -266,7 +276,7 @@ const Canvas = document.querySelector("#imgui-canvas");
         ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
         ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
         ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("here are some pretty cool stuff ive made;");
+        ImGui.Text("heres some pretty cool stuff ive made;");
         ImGui.Spacing();
         if (ImGui.TreeNode("lithium's atm")) {
             ImGui.Text("cool deposit game i made using");
