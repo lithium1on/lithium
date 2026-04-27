@@ -23,7 +23,7 @@ const Canvas = document.querySelector("#imgui-canvas");
     const Playlist = [
         { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg", author: "m1v & luvwillow" },
         { name: "antichrist", file: "assets/audio/antichrist.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & vanity" },
-		{ name: "a hardstyle christmas", file: "assets/audio/hardstyle.opus", icon: "assets/img/music/hardstyle.jpg", author: "vanity, d3r & m1v"},
+        { name: "a hardstyle christmas", file: "assets/audio/hardstyle.opus", icon: "assets/img/music/hardstyle.jpg", author: "vanity, d3r & m1v"},
         { name: "m0nster high", file: "assets/audio/monster.opus", icon: "assets/img/music/monster.jpg", author: "hubithekid, kets4eki,\nwujek, fendisuicide" },
         { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg", author: "yati & lchigo, d3r" },
         { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg", author: "d3r & wasty" },
