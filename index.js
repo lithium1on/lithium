@@ -436,7 +436,8 @@ const Canvas = document.querySelector("#imgui-canvas");
                 `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`,
                 `"give me 6 hours to chop down a tree and i will spend the first four gooning" - Abraham lincoln`,
                 `"I will inject my scripts inside you" - ex7m`,
-                `"if you're 555 then i'm 666" - winxx`
+                `"if you're 555 then i'm 666" - winxx`,
+                `"hello guys" - 3apka`
             ];
             Quotes.forEach(q => ImGui.Text(q));
             ImGui.TreePop();
