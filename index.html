@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- icon -->
-    <link rel="icon" href="assets/img/icon.png" />
-  
+    <link rel="icon" href="assets/img/icon.png">
+
     <!-- embed -->
     <meta property="og:title" content="lithium's home">
     <meta property="og:description" content="lithium's amazing website with amazing stuff - you should try eating batteries (sarcasm pls dont) - long live ratware (big smelly rat)">
     <meta property="og:url" content="https://lithium.wtf/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://lithium.wtf/assets/img/icon.png">
-    <meta property="theme-color" content="#696969">
-    
+    <meta name="theme-color" content="#696969">
+
     <title>lithium's home</title>
+
+    <!-- setup -->
+    <noscript><meta http-equiv="refresh" content="0; url=/noscript"></noscript>
+    <script>
+        if (location.hostname === "lithium.lat") {
+            location.replace("https://lithium.wtf" + location.pathname + location.search + location.hash);
+        }
+
+        const hour = new Date().getHours();
+        const background = hour >= 18 || hour < 8 ? "redmoon" : "bliss";
+        document.documentElement.style.backgroundImage = `url("assets/img/${background}.png")`;
+    </script>
+
     <style>
         html, body {
             margin: 0;
@@ -25,16 +38,18 @@
             height: 100%;
         }
 
+        html {
+            background: center / cover no-repeat;
+        }
+
         #imgui-canvas {
             display: block;
             width: 100vw;
             height: 100vh;
-            background: transparent;
         }
     </style>
 </head>
 <body>
-    <noscript><meta http-equiv="refresh" content="0; url=/noscript"></noscript>
     <canvas id="imgui-canvas"></canvas>
     <script type="module" src="index.js"></script>
 </body>

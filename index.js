@@ -1,515 +1,433 @@
-if (location.hostname === "lithium.lat") {
-  const ReplaceTo = "https://lithium.wtf" + location.pathname + location.search + location.hash;
-  location.replace(ReplaceTo);
-}
-
 import { ImGui, ImVec2, ImTextureRef, ImGuiImplWeb } from "https://esm.sh/@mori2003/jsimgui@0.9.0";
 
-const Canvas = document.querySelector("#imgui-canvas");
+// data
 
-(function() {
-    const Hour = new Date().getHours();
-    const BgImage = (Hour >= 18 || Hour < 8) 
-        ? 'assets/img/redmoon.png' 
-        : 'assets/img/bliss.png';
-    
-    document.body.style.background = `url('${BgImage}') no-repeat center center`;
-    document.body.style.backgroundSize = 'cover';
-})();
+const playlist = [
+    { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg", author: "m1v & luvwillow" },
+    { name: "antichrist", file: "assets/audio/antichrist.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & vanity" },
+    { name: "a hardstyle christmas", file: "assets/audio/hardstyle.opus", icon: "assets/img/music/hardstyle.jpg", author: "vanity, d3r & m1v" },
+    { name: "m0nster high", file: "assets/audio/monster.opus", icon: "assets/img/music/monster.jpg", author: "hubithekid, kets4eki,\nwujek, fendisuicide" },
+    { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg", author: "yati & lchigo, d3r" },
+    { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg", author: "d3r & wasty" },
+    { name: "fed", file: "assets/audio/fed.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
+    { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg", author: "cy4ne & \niwannabemissed" },
+    { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg", author: "disoc8" },
+    { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.jpg", author: "overtonight" },
+    { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg", author: "luvwillow" },
+    { name: "kylie", file: "assets/audio/kylie.opus", icon: "assets/img/music/kylie.jpg", author: "kets4eki, KidSnorlax,\nPröz, lunarr" },
+    { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg", author: "skypebf & 6arelyhuman" },
+    { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
+    { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg", author: "d3r" },
+    { name: "seksualna niebezpieczna", file: "assets/audio/seksualna.opus", icon: "assets/img/music/seksualna.jpg", author: "hubithekid, kets4eki,\nlunarr" },
+    { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
+    { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg", author: "luvwillow" },
+    { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg", author: "d3r archive (wasty)" },
+    { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" },
+    { name: "molly in my backpack", file: "assets/audio/molly.opus", icon: "assets/img/music/molly.jpg", author: "kets4eki, Crescent,\nwujek" },
+    { name: "old memories!", file: "assets/audio/oldmemories.opus", icon: "assets/img/music/m1v2.jpg", author: "m0v / m1v" }
+];
 
-(async () => {
-    await ImGuiImplWeb.Init({ canvas: Canvas, enableDemos: false });
+const socials = [
+    { name: "roblox", url: "https://www.roblox.com/users/23073498", handle: "@lithium_1on" },
+    { name: "steam", url: "https://steamcommunity.com/id/lithium1on", handle: "@lithium_1on" },
+    { name: "youtube", url: "https://www.youtube.com/@lithium.1on", handle: "@lithium.1on" },
+    { name: "tiktok", url: "https://www.tiktok.com/@lithium1on", handle: "@lithium1on" },
+    { name: "twitch", url: "https://twitch.tv/lithium1on", handle: "@lithium1on" },
+    { name: "kick", url: "https://kick.com/lithiumion", handle: "@lithiumion" },
+    { name: "spotify", url: "https://open.spotify.com/users/31jttr5tyy3jk5koz45n22dl3bf4", handle: "lithium" },
+    { name: "soundcloud", url: "https://soundcloud.com/lithium1on", handle: "@lithium1on" },
+    { name: "reddit", url: "https://reddit.com/u/lithium_1on", handle: "u/lithium_1on" },
+    { name: "github", url: "https://github.com/lithium1on", handle: "@lithium1on" },
+    { name: "namemc", url: "https://namemc.com/profile/LithiumMC", handle: "LithiumMC" }
+];
 
-    const Playlist = [
-        { name: "moron", file: "assets/audio/moron.opus", icon: "assets/img/music/moron.jpg", author: "m1v & luvwillow" },
-        { name: "antichrist", file: "assets/audio/antichrist.opus", icon: "assets/img/music/m1v.jpg", author: "m1v & vanity" },
-        { name: "a hardstyle christmas", file: "assets/audio/hardstyle.opus", icon: "assets/img/music/hardstyle.jpg", author: "vanity, d3r & m1v"},
-        { name: "m0nster high", file: "assets/audio/monster.opus", icon: "assets/img/music/monster.jpg", author: "hubithekid, kets4eki,\nwujek, fendisuicide" },
-        { name: "posted up", file: "assets/audio/postedup.opus", icon: "assets/img/music/postedup.jpg", author: "yati & lchigo, d3r" },
-        { name: "she's like a superstar", file: "assets/audio/superstar.opus", icon: "assets/img/music/superstar.jpg", author: "d3r & wasty" },
-        { name: "fed", file: "assets/audio/fed.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
-        { name: "keep yourself safe", file: "assets/audio/kys.opus", icon: "assets/img/music/kys.jpg", author: "cy4ne & \niwannabemissed" },
-        { name: "hello kitty camo", file: "assets/audio/hkc.opus", icon: "assets/img/music/hkc.jpg", author: "disoc8" },
-        { name: "would u notice", file: "assets/audio/notice.opus", icon: "assets/img/music/notice.jpg", author: "overtonight" },
-        { name: "edgy", file: "assets/audio/edgy.opus", icon: "assets/img/music/edgy.jpg", author: "luvwillow" },
-        { name: "kylie", file: "assets/audio/kylie.opus", icon: "assets/img/music/kylie.jpg", author: "kets4eki, KidSnorlax,\nPröz, lunarr" },
-        { name: "turn it up", file: "assets/audio/tiu.opus", icon: "assets/img/music/tiu.jpg", author: "skypebf & 6arelyhuman" },
-        { name: "stay_w_me original", file: "assets/audio/swmo.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
-        { name: "love bomb", file: "assets/audio/love.opus", icon: "assets/img/music/love.jpg", author: "d3r" },
-        { name: "seksualna niebezpieczna", file: "assets/audio/seksualna.opus", icon: "assets/img/music/seksualna.jpg", author: "hubithekid, kets4eki,\nlunarr" },
-        { name: "TeAsE", file: "assets/audio/tease.opus", icon: "assets/img/music/m1v.jpg", author: "m1v" },
-        { name: "scars 4 u", file: "assets/audio/scars.opus", icon: "assets/img/music/scars.jpg", author: "luvwillow" },
-        { name: "thief (wasty) 1/27/2023", file: "assets/audio/thief.opus", icon: "assets/img/music/thief.jpg", author: "d3r archive (wasty)" },
-        { name: "4u", file: "assets/audio/4u.opus", icon: "assets/img/music/4u.jpg", author: "lunarr" },
-        { name: "molly in my backpack", file: "assets/audio/molly.opus", icon: "assets/img/music/molly.jpg", author: "kets4eki, Crescent,\nwujek" },
-        { name: "old memories!", file: "assets/audio/oldmemories.opus", icon: "assets/img/music/m1v2.jpg", author: "m0v / m1v" }
-    ];
+const wallets = [
+    { name: "litecoin", address: "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za" },
+    { name: "bitcoin", address: "bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p" },
+    { name: "ethereum", address: "0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C" },
+    { name: "monero", address: "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk" },
+    { name: "solana", address: "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf" },
+    { name: "xrp", address: "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc" }
+];
 
+const quotes = [
+    `"we are gooners, not skibidies, and gooners don't..." - king`,
+    `"If cancer kills you it dies with you, it's not a loss. It's a draw." - zinc-carbon battery`,
+    `"all your base are belong to us" - Edwin Murray`,
+    `"if youre not tuff then youre not tuff" - Plague`,
+    `"a man who unironically chooses to build a cashgrab game as a replacement for developing exploits is homosexual" - Lily Phillips`,
+    `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`,
+    `"give me 6 hours to chop down a tree and i will spend the first four gooning" - Abraham lincoln`,
+    `"I will inject my scripts inside you" - ex7m`,
+    `"if you're 555 then i'm 666" - winxx`,
+    `"hello guys" - 3apka`
+];
 
-    class MusicPlayer {
-        constructor(playlist) {
-            this.Playlist = playlist;
-            this.AudioElement = null;
-            this.CurrentIndex = 0;
-            this.IsPlaying = false;
-            this.IsLoading = false;
-            this.CurrentTime = 0;
-            this.Duration = 0;
-            this.InitAudioElement();
-            this.LoadTrack(this.CurrentIndex);
-        }
+const serverStatuses = [
+    "offline", "online", "starting", "stopping", "restarting", "saving",
+    "loading", "crashed", "pending", "transferring", "preparing"
+];
 
-        InitAudioElement() {
-            this.AudioElement = new Audio();
+const weatherDescriptions = {
+    0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "overcast",
+    45: "foggy", 48: "foggy",
+    51: "light drizzle", 53: "drizzle", 55: "heavy drizzle", 56: "freezing drizzle", 57: "freezing drizzle",
+    61: "light rain", 63: "rain", 65: "heavy rain", 66: "freezing rain", 67: "freezing rain",
+    71: "light snow", 73: "snow", 75: "heavy snow", 77: "snow grains",
+    80: "rain showers", 81: "rain showers", 82: "heavy showers", 85: "snow showers", 86: "snow showers",
+    95: "thunderstorm", 96: "thunderstorm with hail", 99: "thunderstorm with hail"
+};
 
-            this.AudioElement.addEventListener('loadstart', () => {
-                this.IsLoading = true;
-            });
+// music
 
-            this.AudioElement.addEventListener('loadedmetadata', () => {
-                this.Duration = this.AudioElement.duration || 0;
-                this.IsLoading = false;
-            });
-
-            this.AudioElement.addEventListener('ended', () => {
-                this.Next();
-            });
-
-            this.AudioElement.addEventListener('play', () => {
-                this.IsPlaying = true;
-            });
-
-            this.AudioElement.addEventListener('pause', () => {
-                this.IsPlaying = false;
-            });
-        }
-
-        LoadTrack(index) {
-            this.CurrentIndex = index;
-            const Track = this.Playlist[index];
-            
-            if (Track) {
-                this.AudioElement.src = Track.file;
-                this.CurrentTime = 0;
-                this.Duration = 0;
-                try {
-                    this.AudioElement.load();
-                } catch (e) {}
-            }
-        }
-
-        Play() {
-            this.AudioElement.play().catch(() => {});
-        }
-
-        Pause() {
-            this.AudioElement.pause();
-        }
-
-        Next() {
-            this.LoadTrack((this.CurrentIndex + 1) % this.Playlist.length);
-            this.Play();
-        }
-
-        Previous() {
-            const WasPlaying = this.IsPlaying;
-            this.LoadTrack((this.CurrentIndex - 1 + this.Playlist.length) % this.Playlist.length);
-            if (WasPlaying) this.Play();
-        }
-
-        SelectTrack(index) {
-            if (index !== this.CurrentIndex) {
-                const WasPlaying = this.IsPlaying;
-                this.LoadTrack(index);
-                if (WasPlaying) this.Play();
-            }
-        }
-
-        GetCurrentTrack() {
-            return this.Playlist[this.CurrentIndex];
-        }
-
-        FormatTime(seconds) {
-            if (isNaN(seconds) || seconds < 0) return "00:00";
-            const Minutes = Math.floor(seconds / 60);
-            const Secs = Math.floor(seconds % 60);
-            return `${Minutes.toString().padStart(2, "0")}:${Secs.toString().padStart(2, "0")}`;
-        }
+class MusicPlayer {
+    constructor(tracks) {
+        this.tracks = tracks;
+        this.index = 0;
+        this.loading = false;
+        this.audio = new Audio();
+        this.audio.volume = 0.3;
+        this.audio.addEventListener("loadstart", () => { this.loading = true; });
+        this.audio.addEventListener("loadedmetadata", () => { this.loading = false; });
+        this.audio.addEventListener("error", () => { this.loading = false; });
+        this.audio.addEventListener("ended", () => this.next());
+        this.select(0, false);
     }
 
-    const Player = new MusicPlayer(Playlist);
-    Player.AudioElement.volume = 0.3;
-
-    class MinecraftServer {
-		constructor(Url) {
-				this.Url = Url;
-				this.Json = null;
-				this.Error = null;
-				this.Fetched = false;
-		}
-
-		async Fetch() {
-			if (this.Fetched) return;
-			this.Fetched = true;
-
-			try {
-				const Res = await fetch(this.Url, { cache: "no-store" });
-				if (!Res.ok) throw new Error(`HTTP ${Res.status}`);
-				this.Json = await Res.json();
-				this.Error = null;
-			} catch (e) {
-				this.Error = String(e?.message ?? e);
-			}
-		}
+    get track() {
+        return this.tracks[this.index];
     }
 
-    const Minecraft = new MinecraftServer("https://api.lithium.wtf/mc/about");
-    await Minecraft.Fetch();
-
-    let DisplayTime = "loading...";
-    let DisplayWeather = "loading...";
-
-    async function FetchWeather() {
-        try {
-            const GeoResponse = await fetch("https://geocoding-api.open-meteo.com/v1/search?name=Nantes&count=1&language=en&format=json");
-            const GeoData = await GeoResponse.json();
-            
-            if (!GeoData.results?.length) throw new Error("No location found");
-            
-            const { latitude, longitude } = GeoData.results[0];
-            const WeatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
-            const WeatherData = await WeatherResponse.json();
-            
-            const Temp = WeatherData.current_weather?.temperature;
-            const Code = WeatherData.current_weather?.weathercode;
-            
-            const WeatherDescriptions = {
-                0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "overcast",
-                45: "foggy", 48: "foggy",
-                51: "light drizzle", 53: "drizzle", 55: "heavy drizzle",
-                61: "light rain", 63: "rain", 65: "heavy rain",
-                80: "rain showers", 81: "rain showers", 82: "heavy showers"
-            };
-            
-            const Description = WeatherDescriptions[Code] || "unknown";
-            DisplayWeather = typeof Temp === "number" ? `${Math.round(Temp)}°C, ${Description}` : "weather unavailable";
-        } catch {
-            DisplayWeather = "weather unavailable";
-        }
+    get playing() {
+        return !this.audio.paused;
     }
 
-    function UpdateTime() {
-        try {
-            DisplayTime = new Date().toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris" });
-        } catch {
-            DisplayTime = "time unavailable";
-        }
+    get currentTime() {
+        return this.audio.currentTime || 0;
     }
 
-    UpdateTime();
-    FetchWeather();
-    setInterval(UpdateTime, 1000);
-    setInterval(FetchWeather, 10 * 60 * 1000);
-
-    function LoadTexture(src) {
-        const Id = ImGuiImplWeb.LoadTexture();
-        const Img = new Image();
-        Img.src = src;
-        Img.onload = () => ImGuiImplWeb.LoadTexture(Img, { id: Id });
-        return { id: Id, img: Img };
+    get duration() {
+        return Number.isFinite(this.audio.duration) ? this.audio.duration : 0;
     }
 
-    const Textures = {
-        Atm: LoadTexture("assets/img/atm.png"),
-        Ratware: LoadTexture("assets/img/ratware.png"),
-        Cornball: LoadTexture("assets/img/cornball.png"),
-        Pfp: LoadTexture("assets/img/pfp.png"),
-        MusicIcons: {}
-    };
+    play() {
+        this.audio.play().catch(() => {});
+    }
 
-    Playlist.forEach((track, index) => {
-        if (track.icon) {
-            Textures.MusicIcons[index] = LoadTexture(track.icon);
-        }
+    pause() {
+        this.audio.pause();
+    }
+
+    toggle() {
+        if (this.playing) this.pause();
+        else this.play();
+    }
+
+    select(index, autoplay = this.playing) {
+        this.index = (index + this.tracks.length) % this.tracks.length;
+        this.audio.src = this.track.file;
+        if (autoplay) this.play();
+    }
+
+    next() {
+        this.select(this.index + 1, true);
+    }
+
+    previous() {
+        this.select(this.index - 1);
+    }
+}
+
+function formatTime(seconds) {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(Math.floor(seconds % 60)).padStart(2, "0");
+    return `${minutes}:${secs}`;
+}
+
+const player = new MusicPlayer(playlist);
+
+// minecraft
+
+const minecraft = { server: null, message: "loading..." };
+
+async function fetchMinecraft() {
+    try {
+        const response = await fetch("https://api.lithium.wtf/mc/about", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        minecraft.server = (await response.json()).server ?? null;
+    } catch {
+        minecraft.server = null;
+    }
+    minecraft.message = "server info unavailable";
+}
+
+// time & weather
+
+const parisTime = new Intl.DateTimeFormat("fr-FR", {
+    timeZone: "Europe/Paris",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+});
+
+let weather = "loading...";
+
+async function fetchWeather() {
+    try {
+        const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=47.2172&longitude=-1.5534&current_weather=true");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const { temperature, weathercode } = (await response.json()).current_weather ?? {};
+        weather = typeof temperature === "number"
+            ? `${Math.round(temperature)}°C, ${weatherDescriptions[weathercode] ?? "unknown"}`
+            : "weather unavailable";
+    } catch {
+        weather = "weather unavailable";
+    }
+}
+
+// textures
+
+await ImGuiImplWeb.Init({ canvas: document.querySelector("#imgui-canvas"), enableDemos: false });
+
+const textureCache = new Map();
+
+function loadTexture(src) {
+    if (!textureCache.has(src)) {
+        const texture = { id: ImGuiImplWeb.LoadTexture(), img: new Image(), loaded: false };
+        texture.img.onload = () => {
+            ImGuiImplWeb.LoadTexture(texture.img, { id: texture.id });
+            texture.loaded = true;
+        };
+        texture.img.src = src;
+        textureCache.set(src, texture);
+    }
+    return textureCache.get(src);
+}
+
+const textures = {
+    pfp: loadTexture("assets/img/pfp.png"),
+    atm: loadTexture("assets/img/atm.png"),
+    ratware: loadTexture("assets/img/ratware.png"),
+    cornball: loadTexture("assets/img/cornball.png")
+};
+
+const trackIcons = playlist.map(track => loadTexture(track.icon));
+
+// widgets
+
+function link(label, url = label) {
+    if (ImGui.TextLink(label)) window.open(url, "_blank", "noopener");
+}
+
+function copyLink(label, text = label) {
+    if (ImGui.TextLink(label)) navigator.clipboard.writeText(text).catch(() => {});
+}
+
+function inline(...parts) {
+    parts.forEach((part, i) => {
+        if (i > 0) ImGui.SameLine();
+        if (typeof part === "string") ImGui.Text(part);
+        else link(...part);
     });
+}
 
-    const OpenLink = (label, url) => {
-        if (ImGui.TextLink(label)) {
-            globalThis.open(url, "_blank");
-        }
-    };
+function answer(question, reply) {
+    ImGui.Text(question);
+    ImGui.SameLine();
+    ImGui.TextDisabled(reply);
+}
 
-    const CopyToClipboard = (label, text) => {
-        if (ImGui.TextLink(label)) {
-            navigator.clipboard.writeText(text);
-        }
-    };
+function image(texture, scale) {
+    ImGui.Image(
+        new ImTextureRef(texture.id),
+        new ImVec2(texture.img.width * scale, texture.img.height * scale)
+    );
+}
 
-    const WindowPadding = 3;
-    let CurrentYPos = 10;
-    const StartXPos = 10;
+// windows
 
-    function RenderFrame() {
-        ImGuiImplWeb.BeginRender();
+const windowMargin = 10;
+const windowGap = 3;
+let nextWindowY = windowMargin;
 
-        CurrentYPos = 10;
+function drawWindow(title, drawContents) {
+    ImGui.SetNextWindowPos(new ImVec2(windowMargin, nextWindowY), ImGui.Cond.FirstUseEver);
+    ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
+    if (ImGui.Begin(title, null, ImGui.WindowFlags.AlwaysAutoResize)) drawContents();
+    nextWindowY += ImGui.GetWindowHeight() + windowGap;
+    ImGui.End();
+}
 
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("about", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.BeginGroup();
-        ImGui.Image(
-            new ImTextureRef(Textures.Pfp.id),
-            new ImVec2(Textures.Pfp.img.width / 3, Textures.Pfp.img.height / 3)
-        );
-        ImGui.EndGroup();
-        ImGui.SameLine(0, 8);
-        ImGui.BeginGroup();
-        ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nim 17 years old (november 8th)\nfrenchie guy");
-        ImGui.Spacing();
-        ImGui.Text(`my time: ${DisplayTime}\nmy lovely weather: ${DisplayWeather}`);
-        ImGui.EndGroup();
-        const AboutWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += AboutWindowHeight + WindowPadding;
+function drawAbout() {
+    ImGui.BeginGroup();
+    image(textures.pfp, 1 / 3);
+    ImGui.EndGroup();
+    ImGui.SameLine(0, 8);
+    ImGui.BeginGroup();
+    ImGui.Text("hi, i'm lithium.\ni like eating batteries (sarcasm)\nim 17 years old (november 8th)\nfrenchie guy");
+    ImGui.Spacing();
+    ImGui.Text(`my time: ${parisTime.format()}\nmy lovely weather: ${weather}`);
+    ImGui.EndGroup();
+}
 
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("projects", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("heres some pretty cool stuff ive made;");
-        ImGui.Spacing();
-        if (ImGui.TreeNode("lithium's atm")) {
-            ImGui.Text("cool deposit game i made using");
-            ImGui.SameLine();
-            OpenLink("regui", "https://github.com/depthso/Dear-Regui");
-            ImGui.Text("game link:");
-            ImGui.SameLine();
-            OpenLink("https://www.roblox.com/games/106912201193396/", "https://www.roblox.com/games/106912201193396/");
-            ImGui.Image(
-                new ImTextureRef(Textures.Atm.id),
-                new ImVec2(Textures.Atm.img.width / 1.3, Textures.Atm.img.height / 1.3)
-            );
-            ImGui.TreePop();
-        }
-        if (ImGui.TreeNode("ratware")) {
-            ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
-            ImGui.Text("was mostly just atlantis but with a custom ui lol and very pro custom api");
-            ImGui.Image(
-                new ImTextureRef(Textures.Ratware.id),
-                new ImVec2(Textures.Ratware.img.width / 1.7, Textures.Ratware.img.height / 1.7)
-            );
-            ImGui.Text("ratware isnt coming back any time soon (whole server dead)");
-            ImGui.TreePop();
-        }
-        if (ImGui.TreeNode("cornball ide")) {
-            ImGui.Text("roblox executor inside roblox game!! (amazing)");
-            ImGui.Image(
-                new ImTextureRef(Textures.Cornball.id),
-                new ImVec2(Textures.Cornball.img.width / 1.2, Textures.Cornball.img.height / 1.2)
-            );
-            ImGui.Text("while it cant run shit properly, it has 1% unc and its level 2");
-            ImGui.Text("the only problem with it is the environment being dogshit");
-            ImGui.Text("it uses");
-            ImGui.SameLine();
-            OpenLink("LuauCeption", "https://github.com/RadiatedExodus/LuauCeption");
-            ImGui.SameLine();
-            ImGui.Text("and");
-            ImGui.SameLine();
-            OpenLink("Fiu", "https://github.com/rce-incorporated/Fiu");
-            ImGui.Text("download the");
-            ImGui.SameLine();
-            OpenLink("roblox model", "/assets/misc/cornball.rbxm");
-            ImGui.SameLine();
-            ImGui.Text("or join the");
-            ImGui.SameLine();
-            OpenLink("game", "https://www.roblox.com/games/119510179772995/");
-            ImGui.TreePop();
-        }
-        ImGui.Spacing();
-        ImGui.Text("check back later for more thx");
-        const ProjectsWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += ProjectsWindowHeight + WindowPadding;
+function drawProjects() {
+    ImGui.Text("heres some pretty cool stuff ive made;");
+    ImGui.Spacing();
 
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("links", null, ImGui.WindowFlags.AlwaysAutoResize);
-        OpenLink("roblox", "https://www.roblox.com/users/23073498"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
-        OpenLink("steam", "https://steamcommunity.com/id/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium_1on");
-        OpenLink("youtube", "https://www.youtube.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
-        OpenLink("tiktok", "https://www.tiktok.com/@lithium.1on"); ImGui.SameLine(); ImGui.Text(": @lithium.1on");
-        OpenLink("twitch", "https://twitch.tv/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        OpenLink("kick", "https://kick.com/lithiumion"); ImGui.SameLine(); ImGui.Text(": @lithiumion");
-        OpenLink("spotify", "https://open.spotify.com/users/31jttr5tyy3jk5koz45n22dl3bf4"); ImGui.SameLine(); ImGui.Text(": lithium");
-        OpenLink("soundcloud", "https://soundcloud.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        OpenLink("reddit", "https://reddit.com/u/lithium_1on"); ImGui.SameLine(); ImGui.Text(": u/lithium_1on");
-        OpenLink("github", "https://github.com/lithium1on"); ImGui.SameLine(); ImGui.Text(": @lithium1on");
-        OpenLink("namemc", "https://namemc.com/profile/LithiumMC"); ImGui.SameLine(); ImGui.Text(": LithiumMC");
-        const LinksWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += LinksWindowHeight + WindowPadding;
-
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("contact", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("email:"); ImGui.SameLine(); OpenLink("contact@lithium.wtf", "mailto:contact@lithium.wtf");
-        ImGui.Text("discord:"); ImGui.SameLine(); OpenLink("@lithium_1on", "https://discord.com/users/1284236064420003886");
-        ImGui.SameLine(); ImGui.Text(","); ImGui.SameLine(); OpenLink("@lithetanium (alt)", "https://discord.com/users/1344239874500333649");
-		ImGui.Text("stoat:"); ImGui.SameLine(); CopyToClipboard("lithium#9154", "lithium#9154");
-        ImGui.Text("telegram:"); ImGui.SameLine(); OpenLink("@lithium1on", "https://t.me/lithium1on");
-        const ContactWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += ContactWindowHeight + WindowPadding;
-
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("donations", null, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("paypal:"); ImGui.SameLine(); OpenLink("here", "https://paypal.me/lithiumionbattery");
-        if (ImGui.TreeNode("litecoin")) { CopyToClipboard("ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za", "ltc1qc6hp0kde0kjgd95tglq9mmpkq5dha77q36e2za"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("bitcoin")) { CopyToClipboard("bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p", "bc1qgk74kf49x7mwdmghylzj3ulw5uwpl2dkg9ng3p"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("ethereum")) { CopyToClipboard("0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C", "0x97D0Eb4A107F0140A8eaB1C4B4Dd004e5f33A26C"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("monero")) { CopyToClipboard("45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk", "45J6wSkzyRZEqgZ5z9fBcWN15pfNhxyDp55JEzjZJYqzAKrnnipSDcB1RjVcMAwxQMhEN47voTnXi7B8G38QrWru5gUNNSk"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("solana")) { CopyToClipboard("Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf", "Eyt6wBbZrujGqyqTMrtsLNffURA2cqRWMEXZTWqiVLjf"); ImGui.TreePop(); }
-        if (ImGui.TreeNode("xrp")) { CopyToClipboard("r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc", "r9QQPedYxbLckJT6a2SSzhHrHp97QdsAUc"); ImGui.TreePop(); }
-        const DonationsWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += DonationsWindowHeight + WindowPadding;
-
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("extras", null, ImGui.WindowFlags.AlwaysAutoResize);
-        if (ImGui.TreeNode("questions")) {
-            ImGui.Text("can i steal this?"); ImGui.SameLine(); ImGui.TextDisabled("nuh uh");
-            ImGui.Text("are you a female"); ImGui.SameLine(); ImGui.TextDisabled("think about it");
-            ImGui.Text("ur music sucks i wanna submit soem!!"); ImGui.SameLine(); ImGui.TextDisabled("no my music doesnt suck grrr but if you wanna submit contact me lol");
-            ImGui.Text("lithium pls feet pics"); ImGui.SameLine(); OpenLink("here", "assets/img/feetpics.gif");
-            ImGui.TreePop();
-        }
-        if (ImGui.TreeNode("minecraft server")) { 
-            ImGui.Text("how to join:"); 
-            CopyToClipboard("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf"); 
-            ImGui.Text(`version: ${Minecraft.Json.server.software.version}`);
-            ImGui.Text("server is currently");
-            ImGui.SameLine();
-            if (Minecraft.Json.server.status === 0) {
-                ImGui.Text("offline");
-            } else if (Minecraft.Json.server.status === 1) {
-                ImGui.Text("online");
-            } else if (Minecraft.Json.server.status === 2) {
-                ImGui.Text("starting");
-            } else if (Minecraft.Json.server.status === 3) {
-                ImGui.Text("stopping");
-            } else if (Minecraft.Json.server.status === 4) {
-                ImGui.Text("restarting");
-            } else if (Minecraft.Json.server.status === 5) {
-                ImGui.Text("saving");
-            } else if (Minecraft.Json.server.status === 6) {
-                ImGui.Text("loading");
-            } else if (Minecraft.Json.server.status === 7) {
-                ImGui.Text("crashed");
-            } else if (Minecraft.Json.server.status === 8) {
-                ImGui.Text("pending");
-            } else if (Minecraft.Json.server.status === 9) {
-                ImGui.Text("transferring");
-            } else if (Minecraft.Json.server.status === 10) {
-                ImGui.Text("preparing");
-            }
-            ImGui.Text(`${Minecraft.Json.server.players.count} / ${Minecraft.Json.server.players.max} players are online`);
-            ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!"); 
-            ImGui.Spacing(); 
-            ImGui.Text("rules:"); 
-            ImGui.BulletText("cracks arent allowed, you pooron"); 
-            ImGui.BulletText("no griefing"); 
-            ImGui.BulletText("no hack clients!!"); 
-            ImGui.BulletText("breaking rules = whitelist revoked"); 
-            ImGui.TreePop(); 
-        }
-        if (ImGui.TreeNode("quotes")) {
-            ImGui.Text("dm me on discord to add a quote");
-            ImGui.Spacing();
-            const Quotes = [
-                `"we are gooners, not skibidies, and gooners don't..." - king`,
-                `"If cancer kills you it dies with you, it's not a loss. It's a draw." - zinc-carbon battery`,
-                `"all your base are belong to us" - Edwin Murray`,
-                `"if youre not tuff then youre not tuff" - Plague`,
-                `"a man who unironically chooses to build a cashgrab game as a replacement for developing exploits is homosexual" - Lily Phillips`,
-                `"a person who goons all the time will eventually have nothing to goon to except the thought of gooning" - Lily Phillips`,
-                `"give me 6 hours to chop down a tree and i will spend the first four gooning" - Abraham lincoln`,
-                `"I will inject my scripts inside you" - ex7m`,
-                `"if you're 555 then i'm 666" - winxx`,
-                `"hello guys" - 3apka`
-            ];
-            Quotes.forEach(q => ImGui.Text(q));
-            ImGui.TreePop();
-        }
-        if (ImGui.TreeNode("info")) {
-            ImGui.Text("imgui version:");
-            ImGui.SameLine();
-            ImGui.TextDisabled(ImGui.GetVersion());
-            ImGui.Text("this site is made using");
-            ImGui.SameLine();
-            OpenLink("jsimgui", "https://github.com/mori2003/jsimgui");
-            ImGui.Text("the website's source is on");
-            ImGui.SameLine();
-            OpenLink("github", "https://github.com/lithium1on/lithium");
-            ImGui.TreePop();
-        }
-        const ExtrasWindowHeight = ImGui.GetWindowHeight();
-        ImGui.End();
-        CurrentYPos += ExtrasWindowHeight + WindowPadding;
-
-        ImGui.SetNextWindowPos(new ImVec2(StartXPos, CurrentYPos), ImGui.Cond.FirstUseEver);
-        ImGui.SetNextWindowCollapsed(true, ImGui.Cond.FirstUseEver);
-        ImGui.Begin("music player", null, ImGui.WindowFlags.AlwaysAutoResize);
-        Player.CurrentTime = Player.AudioElement.currentTime || 0;
-        const CurrentIcon = Textures.MusicIcons[Player.CurrentIndex];
-        if (CurrentIcon && CurrentIcon.img.complete) {
-            ImGui.Image(new ImTextureRef(CurrentIcon.id), new ImVec2(80, 80));
-            ImGui.SameLine();
-        }
-        ImGui.BeginGroup();
-        ImGui.Text("now playing:");
-        const CurrentTrack = Player.GetCurrentTrack();
-        ImGui.Text(CurrentTrack ? CurrentTrack.name : "no song");
-        if (Player.IsLoading) ImGui.Text("loading...");
-        ImGui.TextDisabled(CurrentTrack ? `by ${CurrentTrack.author}` : "unknown");
-        ImGui.EndGroup();
-        ImGui.Spacing();
-        ImGui.PushItemWidth(30);
-        if (ImGui.Button("<<", new ImVec2(25, 0))) Player.Previous();
-        ImGui.SameLine();
-        if (Player.IsPlaying) {
-            if (ImGui.Button("||", new ImVec2(25, 0))) Player.Pause();
-        } else {
-            if (ImGui.Button(">", new ImVec2(25, 0))) Player.Play();
-        }
-        ImGui.SameLine();
-        if (ImGui.Button(">>", new ImVec2(25, 0))) Player.Next();
-        ImGui.PopItemWidth();
-        ImGui.SameLine(0, 75);
-        ImGui.Text(`${Player.FormatTime(Player.CurrentTime)} / ${Player.FormatTime(Player.Duration)}`);
-        ImGui.Spacing();
-        if (ImGui.TreeNode("playlist")) {
-            Playlist.forEach((track, index) => {
-                const IsCurrentTrack = index === Player.CurrentIndex;
-                const Label = IsCurrentTrack ? `> ${track.name}` : track.name;
-                if (IsCurrentTrack) {
-                    ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
-                }
-                if (ImGui.Selectable(Label, IsCurrentTrack)) {
-                    Player.SelectTrack(index);
-                }
-                if (IsCurrentTrack) {
-                    ImGui.PopStyleColor();
-                }
-            });
-            ImGui.TreePop();
-        }
-        ImGui.End();
-
-        ImGuiImplWeb.EndRender();
-        requestAnimationFrame(RenderFrame);
+    if (ImGui.TreeNode("lithium's atm")) {
+        inline("cool deposit game i made using", ["regui", "https://github.com/depthso/Dear-Regui"]);
+        inline("game link:", ["https://www.roblox.com/games/106912201193396/"]);
+        image(textures.atm, 1 / 1.3);
+        ImGui.TreePop();
     }
 
-    requestAnimationFrame(RenderFrame);
-})();
+    if (ImGui.TreeNode("ratware")) {
+        ImGui.Text("very dead project, executor that was last updated in march (worse than awp)");
+        ImGui.Text("was mostly just atlantis but with a custom ui lol and very pro custom api");
+        image(textures.ratware, 1 / 1.7);
+        ImGui.Text("ratware isnt coming back any time soon (whole server dead)");
+        ImGui.TreePop();
+    }
+
+    if (ImGui.TreeNode("cornball ide")) {
+        ImGui.Text("roblox executor inside roblox game!! (amazing)");
+        image(textures.cornball, 1 / 1.2);
+        ImGui.Text("while it cant run shit properly, it has 1% unc and its level 2");
+        ImGui.Text("the only problem with it is the environment being dogshit");
+        inline("it uses", ["LuauCeption", "https://github.com/RadiatedExodus/LuauCeption"], "and", ["Fiu", "https://github.com/rce-incorporated/Fiu"]);
+        inline("download the", ["roblox model", "/assets/misc/cornball.rbxm"], "or join the", ["game", "https://www.roblox.com/games/119510179772995/"]);
+        ImGui.TreePop();
+    }
+
+    ImGui.Spacing();
+    ImGui.Text("check back later for more thx");
+}
+
+function drawLinks() {
+    for (const { name, url, handle } of socials) {
+        inline([name, url], `: ${handle}`);
+    }
+}
+
+function drawContact() {
+    inline("email:", ["contact@lithium.wtf", "mailto:contact@lithium.wtf"]);
+    inline("discord:", ["@lithium_1on", "https://discord.com/users/1284236064420003886"], ",", ["@lithetanium (alt)", "https://discord.com/users/1344239874500333649"]);
+    ImGui.Text("stoat:");
+    ImGui.SameLine();
+    copyLink("lithium#9154");
+    inline("telegram:", ["@lithium1on", "https://t.me/lithium1on"]);
+}
+
+function drawDonations() {
+    inline("paypal:", ["here", "https://paypal.me/lithiumionbattery"]);
+    for (const { name, address } of wallets) {
+        if (ImGui.TreeNode(name)) {
+            copyLink(address);
+            ImGui.TreePop();
+        }
+    }
+}
+
+function drawExtras() {
+    if (ImGui.TreeNode("questions")) {
+        answer("can i steal this?", "nuh uh");
+        answer("are you a female", "think about it");
+        answer("ur music sucks i wanna submit soem!!", "no my music doesnt suck grrr but if you wanna submit contact me lol");
+        inline("lithium pls feet pics", ["here", "assets/img/feetpics.gif"]);
+        ImGui.TreePop();
+    }
+
+    if (ImGui.TreeNode("minecraft server")) {
+        ImGui.Text("how to join:");
+        copyLink("ip: mc.lithium.wtf (click to copy)", "mc.lithium.wtf");
+        const { server } = minecraft;
+        if (server) {
+            ImGui.Text(`version: ${server.software?.version ?? "unknown"}`);
+            inline("server is currently", serverStatuses[server.status] ?? "unknown");
+            ImGui.Text(`${server.players?.count ?? 0} / ${server.players?.max ?? 0} players are online`);
+        } else {
+            ImGui.TextDisabled(minecraft.message);
+        }
+        ImGui.Text("whitelist is on, must dm me on discord to get whitelisted!!");
+        ImGui.Spacing();
+        ImGui.Text("rules:");
+        ImGui.BulletText("cracks arent allowed, you pooron");
+        ImGui.BulletText("no griefing");
+        ImGui.BulletText("no hack clients!!");
+        ImGui.BulletText("breaking rules = whitelist revoked");
+        ImGui.TreePop();
+    }
+
+    if (ImGui.TreeNode("quotes")) {
+        ImGui.Text("dm me on discord to add a quote");
+        ImGui.Spacing();
+        for (const quote of quotes) ImGui.Text(quote);
+        ImGui.TreePop();
+    }
+
+    if (ImGui.TreeNode("info")) {
+        answer("imgui version:", ImGui.GetVersion());
+        inline("this site is made using", ["jsimgui", "https://github.com/mori2003/jsimgui"]);
+        inline("the website's source is on", ["github", "https://github.com/lithium1on/lithium"]);
+        ImGui.TreePop();
+    }
+}
+
+function drawMusicPlayer() {
+    const icon = trackIcons[player.index];
+    if (icon.loaded) {
+        ImGui.Image(new ImTextureRef(icon.id), new ImVec2(80, 80));
+        ImGui.SameLine();
+    }
+    ImGui.BeginGroup();
+    ImGui.Text("now playing:");
+    ImGui.Text(player.track.name);
+    if (player.loading) ImGui.Text("loading...");
+    ImGui.TextDisabled(`by ${player.track.author}`);
+    ImGui.EndGroup();
+    ImGui.Spacing();
+
+    const buttonSize = new ImVec2(25, 0);
+    if (ImGui.Button("<<", buttonSize)) player.previous();
+    ImGui.SameLine();
+    if (ImGui.Button(player.playing ? "||" : ">", buttonSize)) player.toggle();
+    ImGui.SameLine();
+    if (ImGui.Button(">>", buttonSize)) player.next();
+    ImGui.SameLine(0, 75);
+    ImGui.Text(`${formatTime(player.currentTime)} / ${formatTime(player.duration)}`);
+    ImGui.Spacing();
+
+    if (ImGui.TreeNode("playlist")) {
+        playlist.forEach((track, index) => {
+            const isCurrent = index === player.index;
+            if (isCurrent) ImGui.PushStyleColor(ImGui.Col.Text, 0xFF66FF66);
+            if (ImGui.Selectable(isCurrent ? `> ${track.name}` : track.name, isCurrent) && !isCurrent) {
+                player.select(index);
+            }
+            if (isCurrent) ImGui.PopStyleColor();
+        });
+        ImGui.TreePop();
+    }
+}
+
+// render
+
+function render() {
+    ImGuiImplWeb.BeginRender();
+    nextWindowY = windowMargin;
+    drawWindow("about", drawAbout);
+    drawWindow("projects", drawProjects);
+    drawWindow("links", drawLinks);
+    drawWindow("contact", drawContact);
+    drawWindow("donations", drawDonations);
+    drawWindow("extras", drawExtras);
+    drawWindow("music player", drawMusicPlayer);
+    ImGuiImplWeb.EndRender();
+    requestAnimationFrame(render);
+}
+
+fetchWeather();
+fetchMinecraft();
+setInterval(fetchWeather, 10 * 60 * 1000);
+setInterval(fetchMinecraft, 60 * 1000);
+requestAnimationFrame(render);
